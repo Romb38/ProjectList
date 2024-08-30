@@ -7,7 +7,7 @@ Cet algorithme est la pour fournir des catégories personnalisées pour le jeu [
 Cette application à pour but de fournir des catégories pour le jeu Crack List. Ces catégories sont proposée par la communauté où généré par IA.
 
 # Auteurs
-test
+
 Romb38
 
 Amassif
