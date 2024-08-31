@@ -1,6 +1,7 @@
 package fr.standodua.app.projectlist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.standodua.app.projectlist.ui.theme.ProjectListTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +76,23 @@ fun MainScreen(modifier: Modifier = Modifier) {
         }
     }
 
+    fun updateData(){
+        val datas : List<Category>? = getData()
+        if(datas != null && datas.size == 3){
+            // On mets à jour les catégories dans le jeu
+            datas.forEach { data ->
+                updateListItemBox(data.text,data.difficulty)
+            }
+        } else {
+            Log.e("getData", "Error - Fetching data")
+        }
+    }
+
+    // Utiliser LaunchedEffect pour appeler updateData lorsque le composable est initialisé
+    LaunchedEffect(Unit) {
+        updateData()
+    }
+
 
     Box(
         modifier = modifier
@@ -104,7 +124,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             // Bouton carré pour mettre à jour un ListItemBox
             Button(
                 onClick = {
-                    updateListItemBox("Ceci est un texte", 1) // Mettre à jour l'élément "facile"
+                    updateData()
                 },
                 modifier = Modifier
                     .size(100.dp), // Taille du bouton carré
