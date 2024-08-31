@@ -1,5 +1,6 @@
 package fr.standodua.app.projectlist
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -24,16 +25,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,6 +49,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import fr.standodua.app.projectlist.Constants.MAX_DIFFICULTY
 import fr.standodua.app.projectlist.ui.theme.ProjectListTheme
 
@@ -55,12 +63,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ProjectListTheme {
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Blue) // Fond bleu pour l'application
-                ) { innerPadding ->
-                    MainScreen(modifier = Modifier.padding(innerPadding))
+                // Utilisez NavHost pour gérer les écrans
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = "main") {
+                    composable("main") {
+                        MainScreen(navController = navController)
+                    }
+                    composable("settings") {
+                        SettingsScreen(onBack = {
+                            navController.popBackStack() // Retour à l'écran précédent
+                        })
+                    }
                 }
             }
         }
@@ -68,7 +81,15 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val sharedPreferences = remember { context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
+
+    // Toujours remettre isDialogShown à true au démarrage
+    val isDialogShown = rememberSaveable {
+        mutableStateOf(true)
+    }
+
     // Couleurs définies (à adapter pour les tableaux de couleurs plus tard)
     val colors = arrayOf(
         colorResource(R.color.my_cyan),  // Case 1 : Facile
@@ -78,23 +99,23 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
     // Tableau pour les textes des ListItemBox
     val textArray = remember {
-        mutableStateOf(
-            Array(MAX_DIFFICULTY) { index ->
-                "Catégorie n°${index + 1}" // Génère les chaînes "Catégorie n°1", "Catégorie n°2", "Catégorie n°3"
-            }
-        )
+        mutableStateOf(Array(MAX_DIFFICULTY) { index ->
+            "Catégorie n°${index + 1}" // Génère les chaînes "Catégorie n°1", "Catégorie n°2", "Catégorie n°3"
+        })
     }
 
     val isToast = remember { mutableStateOf("") }
-
-    // État pour afficher la boîte de dialogue
-    val showDialog = remember { mutableStateOf(true) }
 
     // Fonction pour mettre à jour un ListItemBox
     fun updateListItemBox(text: String, diff: Int) {
         if (diff in 1..MAX_DIFFICULTY) {
             textArray.value[diff - 1] = text
         }
+    }
+
+    if (isToast.value.isNotEmpty()) {
+        showToast(isToast.value)
+        isToast.value = ""
     }
 
     fun updateData() {
@@ -116,7 +137,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
             colors[difficulty - 1]
         } else {
             // Génère une couleur unique basée sur la difficulté
-            // Vous pouvez ajuster la logique pour une couleur spécifique
             val seed = difficulty
             Color(
                 red = (seed * 1234567 % 256) / 255f,
@@ -129,52 +149,59 @@ fun MainScreen(modifier: Modifier = Modifier) {
     // Utiliser LaunchedEffect pour appeler updateData lorsque le composable est initialisé
     LaunchedEffect(Unit) {
         updateData()
+        with(sharedPreferences.edit()) {
+            remove("dialog_shown")
+            apply()
+        }
     }
 
-    if (isToast.value.isNotEmpty()) {
-        ShowToast(isToast.value)
-        isToast.value = ""
+    // Fonction pour mettre à jour SharedPreferences après avoir affiché le dialogue
+    fun markDialogAsShown() {
+        with(sharedPreferences.edit()) {
+            putBoolean("dialog_shown", true)
+            apply()
+        }
+        isDialogShown.value = false
     }
 
-    // Boîte de dialogue
-    if (showDialog.value) {
+    // Afficher la boîte de dialogue uniquement si c'est la première fois
+    if (isDialogShown.value) {
         AlertDialog(
             onDismissRequest = {
-                showDialog.value = false
+                isDialogShown.value = false
+                markDialogAsShown()
             },
             title = { Text("Attention") },
             text = {
-                // Utiliser un Box pour centrer le texte
                 Box(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Cette application fonctionne avec le jeu de société Crack-List (studio Yaqua) mais nous ne sommes pas affilié d'une quelconque manière que ça soit aux créateurs de ce jeu. Il s'agit d'une création purement personnelle à but non-commerciale."
+                        text = "Cette application fonctionne avec le jeu de société Crack-List (studio Yaqua) mais nous ne sommes pas affiliés d'une quelconque manière aux créateurs de ce jeu. Il s'agit d'une création purement personnelle à but non-commercial."
                     )
                 }
             },
             confirmButton = {
-                Button(
-                    onClick = {
-                        showDialog.value = false
-                    }
-                ) {
+                Button(onClick = {
+                    isDialogShown.value = false
+                    markDialogAsShown()
+                }) {
                     Text("J'ai compris")
                 }
             }
         )
     }
 
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(colorResource(R.color.my_blue)) /*#352895*/
+            .background(colorResource(R.color.my_blue))
             .padding(16.dp)
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -182,13 +209,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
             LazyColumn(
                 modifier = Modifier
                     .weight(1f) // Permet à LazyColumn de prendre tout l'espace disponible
-                    .padding(vertical = 16.dp), // Padding vertical pour la LazyColumn
+                    .padding(vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp) // Espacement entre les éléments
             ) {
                 items(MAX_DIFFICULTY) { i ->
                     ListItemBox(
-                        text = textArray.value[i],
-                        color = getColorForDifficulty(i + 1)
+                        text = textArray.value[i], color = getColorForDifficulty(i + 1)
                     )
                 }
             }
@@ -196,24 +222,60 @@ fun MainScreen(modifier: Modifier = Modifier) {
             // Ajouter un Spacer pour créer un espace flexible
             Spacer(modifier = Modifier.weight(0.005f))
 
-            // Bouton carré pour mettre à jour un ListItemBox
-            Button(
-                onClick = {
-                    updateData()
-                },
+            Box(
                 modifier = Modifier
-                    .size(100.dp), // Taille du bouton carré
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(R.color.my_yellow), // Couleur de fond du bouton
-                    contentColor = Color.White // Couleur du texte à l'intérieur du bouton
-                )
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .height(100.dp) // Ajustez la hauteur en fonction des besoins
             ) {
-                Icon(
-                    imageVector = Icons.Default.Refresh, // Icône de rafraîchissement
-                    contentDescription = "Refresh", // Description pour l'accessibilité
-                    tint = Color.White, // Couleur de l'icône
-                    modifier = Modifier.size(48.dp) // Taille de l'icône
-                )
+                // Conteneur pour le bouton de mise à jour et le bouton des paramètres
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Bouton carré pour mettre à jour un ListItemBox
+                    Button(
+                        onClick = {
+                            updateData()
+                        },
+                        modifier = Modifier
+                            .size(100.dp), // Taille du bouton carré
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(R.color.my_yellow),
+                            contentColor = Color.White
+                        ),
+                        shape = CircleShape
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh",
+                            tint = Color.White,
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+                }
+
+                // Bouton des paramètres en couche différente
+                IconButton(
+                    onClick = {
+                        // Ajoutez votre logique de navigation ici
+                        navController.navigate("settings")
+                    },
+                    modifier = Modifier
+                        .size(150.dp)
+                        .align(Alignment.CenterEnd) // Aligne le bouton des paramètres à droite
+                        .padding(end = 10.dp) // Espacement depuis le bord droit
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Settings,
+                        contentDescription = "Settings",
+                        tint = Color.LightGray,
+                        modifier = Modifier.size(38.dp)
+                    )
+                }
             }
 
             // Texte sous le bouton, positionné tout en bas de l'écran
@@ -221,18 +283,16 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 text = "Made by Amassif & Romb38",
                 color = Color.LightGray,
                 fontSize = 12.sp,
-                modifier = Modifier
-                    .padding(top = 30.dp),
+                modifier = Modifier.padding(top = 30.dp),
                 textAlign = TextAlign.Center
             )
         }
     }
 }
 
-
 // Fonction pour afficher un Toast
 @Composable
-fun ShowToast(message: String) {
+fun showToast(message: String) {
     val context = LocalContext.current
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
@@ -244,8 +304,7 @@ fun ListItemBox(text: String, color: Color, modifier: Modifier = Modifier) {
             .fillMaxWidth()
             .height(195.dp)
             .background(colorResource(R.color.my_red), shape = RoundedCornerShape(40.dp))
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+            .padding(16.dp), contentAlignment = Alignment.Center
     ) {
         Box(
             modifier = modifier
@@ -285,8 +344,7 @@ fun ListItemBox(text: String, color: Color, modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .size(16.dp) // Taille du point
                         .background(
-                            color,
-                            shape = CircleShape
+                            color, shape = CircleShape
                         ) // Point de couleur avec une forme circulaire
                 )
             }
@@ -294,10 +352,31 @@ fun ListItemBox(text: String, color: Color, modifier: Modifier = Modifier) {
     }
 }
 
+
+
+@Composable
+fun MainScreenWithNav(navController: NavHostController, modifier: Modifier = Modifier) {
+    MainScreen(navController = navController, modifier = modifier)
+}
+
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
     ProjectListTheme {
-        MainScreen()
+        // Create a NavHostController for the preview
+        val navController = rememberNavController()
+
+        // Use a NavHost to simulate navigation
+        NavHost(navController = navController, startDestination = "main") {
+            composable("main") {
+                MainScreenWithNav(navController = navController)
+            }
+            composable("settings") {
+                SettingsScreen(onBack = {
+                    navController.popBackStack() // Simulates going back
+                })
+            }
+        }
     }
 }
+

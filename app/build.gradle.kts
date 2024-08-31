@@ -60,10 +60,12 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    //My implementations
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.google.code.gson:gson:2.8.9")
+    implementation("androidx.navigation:navigation-compose:2.6.0") // Vérifiez la dernière version disponible
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
