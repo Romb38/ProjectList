@@ -12,6 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,6 +46,34 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
+    // Initialisation des couleurs en dehors du remember
+    val easyColor = colorResource(R.color.my_cyan)
+    val mediumColor = colorResource(R.color.my_yellow)
+    val hardColor = colorResource(R.color.my_red)
+
+    // États pour les textes et couleurs des ListItemBox
+    val easyText = remember { mutableStateOf("Ca fait penser à Noël") }
+
+    val mediumText = remember { mutableStateOf("Un prénom qui existe (ou pas)") }
+
+    val hardText = remember { mutableStateOf("Le pull préféré de Jean Marie") }
+
+    // Fonction pour mettre à jour un ListItemBox
+    fun updateListItemBox(text: String, diff: Int) {
+        when (diff) {
+            1 -> {
+                easyText.value = text
+            }
+            2 -> {
+                mediumText.value = text
+            }
+            3 -> {
+                hardText.value = text
+            }
+        }
+    }
+
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -63,19 +93,19 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     .weight(1f), // Prend presque tout l'espace vertical disponible
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                //[TODO] Adapter les difficultés en fonctions des thématiques choisies
                 // Facile
-                ListItemBox(text = "Ca fait penser à Noël", color = colorResource(R.color.my_cyan))
+                ListItemBox(text = easyText.value, color = easyColor)
                 // Normal
-                ListItemBox(text = "Un prénom qui existe (ou pas)", color = colorResource(R.color.my_yellow))
+                ListItemBox(text = mediumText.value, color = mediumColor)
                 // Difficile
-                ListItemBox(text = "Le pull préférer de Jean Marie", color = colorResource(R.color.my_red))
-
+                ListItemBox(text = hardText.value, color = hardColor)
             }
 
-            // Bouton carré
+            // Bouton carré pour mettre à jour un ListItemBox
             Button(
-                onClick = { /* Action pour le bouton */ },
+                onClick = {
+                    updateListItemBox("Ceci est un texte", 1) // Mettre à jour l'élément "facile"
+                },
                 modifier = Modifier
                     .size(100.dp), // Taille du bouton carré
                 colors = ButtonDefaults.buttonColors(
@@ -138,12 +168,15 @@ fun ListItemBox(text: String, color : Color, modifier: Modifier = Modifier) {
                         text = text,
                         style = TextStyle(
                             fontSize = 20.sp, // Taille de la police augmentée
-                            fontWeight = FontWeight.Bold // Rend le texte plus gras
-                        )
+                            fontWeight = FontWeight.Bold, // Rend le texte plus gras
+                            textAlign = TextAlign.Center, // Centrer le texte horizontalement
+                            color = Color.Black // Définit la couleur du texte en noir
+                        ),
+                        modifier = Modifier.fillMaxWidth() // S'assure que le Text occupe toute la largeur disponible
                     )
                 }
 
-                Spacer(modifier = Modifier.width(5.dp)) // Espacement entre le texte et le point de couleur
+                Spacer(modifier = Modifier.width(15.dp)) // Espacement entre le texte et le point de couleur
 
                 Box(
                     modifier = Modifier
