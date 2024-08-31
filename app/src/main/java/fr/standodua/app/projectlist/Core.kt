@@ -1,11 +1,13 @@
 package fr.standodua.app.projectlist
 
 import android.util.Log
-import kotlinx.coroutines.*
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.IOException
 
 // Définition des données
@@ -15,8 +17,27 @@ data class Category(
     val theme: String
 )
 
+object Cache {
+    @Volatile
+    private var cachedCategories: List<Category>? = null
+
+    fun getCachedCategories(): List<Category>? {
+        return cachedCategories
+    }
+
+    fun setCachedCategories(categories: List<Category>) {
+        cachedCategories = categories
+    }
+}
+
 // Fonction suspendue pour récupérer les catégories depuis une URL JSON
 suspend fun fetchCategoriesFromJson(): List<Category>? {
+    // Vérifier si les données sont déjà en cache
+    Cache.getCachedCategories()?.let {
+        Log.d("Cache", "Returning cached data")
+        return it
+    }
+
     val url = "https://raw.githubusercontent.com/Romb38/ProjectList/main/list.json"
     val client = OkHttpClient()
     val request = Request.Builder()
@@ -32,7 +53,12 @@ suspend fun fetchCategoriesFromJson(): List<Category>? {
 
                 val gson = Gson()
                 val categoryType = object : TypeToken<List<Category>>() {}.type
-                gson.fromJson<List<Category>>(json, categoryType)
+                val categories = gson.fromJson<List<Category>>(json, categoryType)
+
+                // Mettre les données en cache
+                Cache.setCachedCategories(categories)
+
+                categories
             } else {
                 Log.e("NetworkResponse", "Request failed with status code: ${response.code}")
                 null
@@ -44,13 +70,14 @@ suspend fun fetchCategoriesFromJson(): List<Category>? {
     }
 }
 
+
 // Fonction principale pour exécuter le code
 fun getData(): List<Category>? = runBlocking {
-    val categories = fetchCategoriesFromJson()
+    val categories = fetchCategoriesFromJson() ?: return@runBlocking null
 
     //[TODO] Choose wich catégories to use
 
-    val firstThreeCategories = categories?.take(3)
+    val firstThreeCategories = categories.take(3)
 
     return@runBlocking firstThreeCategories
 }
