@@ -3,6 +3,8 @@ package fr.standodua.app.projectlist
 import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import fr.standodua.app.projectlist.Constants.LISTS_URL
+import fr.standodua.app.projectlist.Constants.MAX_DIFFICULTY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -38,7 +40,7 @@ suspend fun fetchCategoriesFromJson(): List<Category>? {
         return it
     }
 
-    val url = "https://raw.githubusercontent.com/Romb38/ProjectList/main/list.json"
+    val url = LISTS_URL
     val client = OkHttpClient()
     val request = Request.Builder()
         .url(url)
@@ -70,14 +72,52 @@ suspend fun fetchCategoriesFromJson(): List<Category>? {
     }
 }
 
+// Fonction pour obtenir une catégorie au hasard basée sur la difficulté et les thèmes
+fun getRandomCategory(
+    categories: List<Category>,
+    difficulty: Int,
+    excludedThemes: List<String> = emptyList()
+): Category? {
+    // Filtrer les catégories selon la difficulté et exclure celles des thèmes donnés
+    val filteredCategories = categories.filter { category ->
+        category.difficulty == difficulty && !excludedThemes.contains(category.theme)
+    }
+
+    // Sélectionner une catégorie au hasard parmi les catégories filtrées
+    return if (filteredCategories.isNotEmpty()) {
+        filteredCategories.random() // Choisit une catégorie au hasard
+    } else {
+        null // Aucun résultat trouvé
+    }
+}
 
 // Fonction principale pour exécuter le code
 fun getData(): List<Category>? = runBlocking {
     val categories = fetchCategoriesFromJson() ?: return@runBlocking null
 
-    //[TODO] Choose wich catégories to use
+    // Liste pour stocker les catégories sélectionnées
+    val selectedCategories = mutableListOf<Category>()
 
-    val firstThreeCategories = categories.take(3)
+    // Liste pour suivre les thèmes déjà utilisés
+    val usedThemes = mutableSetOf<String>()
 
-    return@runBlocking firstThreeCategories
+    // Boucle sur les valeurs de difficulté 1, 2, 3
+    for (difficulty in 1..MAX_DIFFICULTY) {
+        // Obtenir une catégorie correspondant à la difficulté et excluant les thèmes déjà utilisés
+        val category = getRandomCategory(
+            categories = categories,
+            difficulty = difficulty,
+            excludedThemes = usedThemes.toList()
+        )
+
+        if (category != null) {
+            // Ajouter la catégorie sélectionnée à la liste
+            selectedCategories.add(category)
+
+            // Ajouter le thème de la catégorie à la liste des thèmes utilisés
+            usedThemes.add(category.theme)
+        }
+    }
+    Log.d("getData",selectedCategories.toString())
+    return@runBlocking selectedCategories
 }

@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -43,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.standodua.app.projectlist.Constants.MAX_DIFFICULTY
 import fr.standodua.app.projectlist.ui.theme.ProjectListTheme
 
 
@@ -66,48 +68,65 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
-    // Initialisation des couleurs en dehors du remember
-    val easyColor = colorResource(R.color.my_cyan)
-    val mediumColor = colorResource(R.color.my_yellow)
-    val hardColor = colorResource(R.color.my_red)
+    // Couleurs définies (à adapter pour les tableaux de couleurs plus tard)
+    val colors = arrayOf(
+        colorResource(R.color.my_cyan),  // Case 1 : Facile
+        colorResource(R.color.my_yellow), // Case 2 : Normal
+        colorResource(R.color.my_red)    // Case 3 : Difficile
+    )
 
-    // États pour les textes et couleurs des ListItemBox
-    val easyText = remember { mutableStateOf("Ca fait penser à Noël") }
-
-    val mediumText = remember { mutableStateOf("Un prénom qui existe (ou pas)") }
-
-    val hardText = remember { mutableStateOf("Le pull préféré de Jean Marie") }
+    // Tableau pour les textes des ListItemBox
+    val textArray = remember {
+        mutableStateOf(
+            arrayOf(
+                "Ca fait penser à Noël",  // Case 1 : Facile
+                "Un prénom qui existe (ou pas)",  // Case 2 : Normal
+                "Le pull préféré de Jean Marie"  // Case 3 : Difficile
+            )
+        )
+    }
 
     val isToast = remember { mutableStateOf("") }
 
+    // État pour afficher la boîte de dialogue
+    val showDialog = remember { mutableStateOf(true) }
+
     // Fonction pour mettre à jour un ListItemBox
     fun updateListItemBox(text: String, diff: Int) {
-        when (diff) {
-            1 -> {
-                easyText.value = text
-            }
-            2 -> {
-                mediumText.value = text
-            }
-            3 -> {
-                hardText.value = text
-            }
+        if (diff in 1..MAX_DIFFICULTY) {
+            textArray.value[diff - 1] = text
         }
     }
 
-    fun updateData(){
-        val datas : List<Category>? = getData()
-        if(datas != null && datas.size == 3){
+    fun updateData() {
+        val datas: List<Category>? = getData()
+        if (datas != null && datas.size == MAX_DIFFICULTY) {
             // On mets à jour les catégories dans le jeu
             datas.forEach { data ->
-                updateListItemBox(data.text,data.difficulty)
+                updateListItemBox(data.text, data.difficulty)
             }
         } else {
             Log.e("getData", "Error - Fetching data")
-            isToast.value = "Error - Fetching data"
+            isToast.value = "Error - Check your intenet connexion"
         }
     }
 
+    // Fonction pour générer une couleur à partir de la difficulté (au-delà de 3)
+    fun getColorForDifficulty(difficulty: Int): Color {
+        return if (difficulty <= colors.size) {
+            colors[difficulty - 1]
+        } else {
+            // Génère une couleur unique basée sur la difficulté
+            // Vous pouvez ajuster la logique pour une couleur spécifique
+            val seed = difficulty
+            val color = Color(
+                red = (seed * 1234567 % 256) / 255f,
+                green = (seed * 2345678 % 256) / 255f,
+                blue = (seed * 3456789 % 256) / 255f
+            )
+            color
+        }
+    }
 
 
     // Utiliser LaunchedEffect pour appeler updateData lorsque le composable est initialisé
@@ -115,11 +134,41 @@ fun MainScreen(modifier: Modifier = Modifier) {
         updateData()
     }
 
-    if (!isToast.value.equals("")){
+    if (!isToast.value.equals("")) {
         ShowToast(isToast.value)
         isToast.value = ""
     }
 
+
+    // Boîte de dialogue
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                showDialog.value = false
+            },
+            title = { Text("Attention") },
+            text = {
+                // Utiliser un Box pour centrer le texte
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Cette application fonctionne avec le jeu de société Crack-list (studio Yaqua) mais nous ne sommes pas affilié d'une quelconque manière que ça soit aux créateurs de ce jeu. Il s'agit d'une création purement personnelle à but non-commerciale.",
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog.value = false
+                    }
+                ) {
+                    Text("J'ai compris")
+                }
+            }
+        )
+    }
 
     Box(
         modifier = modifier
@@ -140,12 +189,13 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     .weight(1f), // Prend presque tout l'espace vertical disponible
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Facile
-                ListItemBox(text = easyText.value, color = easyColor)
-                // Normal
-                ListItemBox(text = mediumText.value, color = mediumColor)
-                // Difficile
-                ListItemBox(text = hardText.value, color = hardColor)
+                // Utilisation d'une boucle pour afficher les ListItemBox
+                for (i in 1..3) {
+                    ListItemBox(
+                        text = textArray.value[i - 1],
+                        color = getColorForDifficulty(i)
+                    )
+                }
             }
 
             // Bouton carré pour mettre à jour un ListItemBox
@@ -189,7 +239,7 @@ fun ShowToast(message: String) {
 }
 
 @Composable
-fun ListItemBox(text: String, color : Color, modifier: Modifier = Modifier) {
+fun ListItemBox(text: String, color: Color, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -202,8 +252,8 @@ fun ListItemBox(text: String, color : Color, modifier: Modifier = Modifier) {
             modifier = modifier
                 .fillMaxSize()
                 .padding(4.dp)
-                .background(Color.White,  shape = RoundedCornerShape(30.dp))
-        ){
+                .background(Color.White, shape = RoundedCornerShape(30.dp))
+        ) {
 
             Row(
                 modifier = Modifier
@@ -235,7 +285,10 @@ fun ListItemBox(text: String, color : Color, modifier: Modifier = Modifier) {
                 Box(
                     modifier = Modifier
                         .size(16.dp) // Taille du point
-                        .background(color, shape = CircleShape) // Point de couleur avec une forme circulaire
+                        .background(
+                            color,
+                            shape = CircleShape
+                        ) // Point de couleur avec une forme circulaire
                 )
             }
         }
