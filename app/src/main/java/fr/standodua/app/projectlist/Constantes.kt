@@ -8,9 +8,9 @@ object Constants {
     // URL de base pour les thèmes
     const val THEME_URL = "https://raw.githubusercontent.com/Romb38/ProjectList/main/theme.json"
 
-    // [TODO] Placer la bonne URL ici !
+    // [TODO] Placer la bonne URL ici (pour l'instant ce n'est pas celle du main)
     // URL de base pour les langues
-    const val LANG_URL = ""
+    const val LANG_URL = "https://raw.githubusercontent.com/Romb38/ProjectList/updatedMain/lang.json"
 
 
 }

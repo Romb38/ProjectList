@@ -82,7 +82,7 @@ fun LanguageSelectionDialog(
     // Charger les options de langue en arrière-plan
     LaunchedEffect(Unit) {
         val url = LANG_URL
-        val fetchedLanguages = fetchStringFromJson(url) ?: emptyList()
+        val fetchedLanguages = fetchStringFromJson(url, true) ?: emptyList()
         Log.d("LanguageLoad", "Fetched languages: $fetchedLanguages")
         languageOptions.value = fetchedLanguages
     }
@@ -191,7 +191,7 @@ fun ThemeSelectionDialog(
     // Charger les thèmes en arrière-plan
     LaunchedEffect(Unit) {
         val url = THEME_URL
-        val fetchedThemes = fetchStringFromJson(url) ?: emptyList()
+        val fetchedThemes = fetchStringFromJson(url,false) ?: emptyList()
         Log.d("ThemeLoad", "Fetched themes: $fetchedThemes")
         themeOptions.value = fetchedThemes
     }
@@ -405,7 +405,7 @@ fun FullWidthClickableText(text : String,onClick: () -> Unit) {
     }
 }
 
-
+// [TODO] Réfléchir au fonctionnement du family mode
 @Composable
 fun FamilyModeItem(context: Context) {
     // Accéder à SharedPreferences
@@ -454,6 +454,7 @@ fun FamilyModeItem(context: Context) {
 fun SettingsScreen(onBack: () -> Unit) {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
+    var isWIP by remember { mutableStateOf(false) }
 
     val sharedPreferences = LocalContext.current.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
     var savedDifficulty = sharedPreferences.getInt("difficulty_value", chosen_difficulty) // 3 est la valeur par défaut si aucune valeur n'est trouvée
@@ -536,7 +537,18 @@ fun SettingsScreen(onBack: () -> Unit) {
                 Separator()
             }
 
+            item {
+                // [TODO] Faire le fonctionnement de l'import des listes
+                FullWidthClickableText(text = "Importer vos listes (WIP)", onClick = {  isWIP = true })
+                Separator()
+            }
+
         }
+    }
+
+    if (isWIP){
+        ShowToast("Work in progress")
+        isWIP = false
     }
 
     if (showLanguageDialog) {

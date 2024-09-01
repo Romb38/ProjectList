@@ -28,6 +28,9 @@ object Cache {
     @Volatile
     private var cachedThemes : List<String>? = null
 
+    @Volatile
+    private var cachedLang : List<String>? = null
+
     fun getCachedCategories(): List<Category>? {
         return cachedCategories
     }
@@ -42,6 +45,14 @@ object Cache {
 
     fun setCachedThemes(themes: List<String>) {
         cachedThemes = themes
+    }
+
+    fun getCachedLang(): List<String>? {
+        return cachedLang
+    }
+
+    fun setCachedLang(lang: List<String>) {
+        cachedLang = lang
     }
 }
 
@@ -86,11 +97,18 @@ suspend fun fetchCategoriesFromJson(): List<Category>? {
 }
 
 
-suspend fun fetchStringFromJson(url: String): List<String>? {
+suspend fun fetchStringFromJson(url: String, isLang : Boolean): List<String>? {
     // Vérifier si les données sont déjà en cache
-    Cache.getCachedThemes()?.let {
-        Log.d("Cache", "Returning cached data")
-        return it
+    if (isLang){
+        Cache.getCachedLang()?.let{
+            Log.d("Cache", "Returning cached data")
+            return it
+        }
+    } else {
+        Cache.getCachedThemes()?.let {
+            Log.d("Cache", "Returning cached data")
+            return it
+        }
     }
 
     val client = OkHttpClient()
@@ -110,7 +128,12 @@ suspend fun fetchStringFromJson(url: String): List<String>? {
                 val themes = gson.fromJson<List<String>>(json, themeType)
 
                 // Mettre les données en cache
-                Cache.setCachedThemes(themes)
+                if (isLang){
+                    Cache.setCachedLang(themes)
+                } else {
+                    Cache.setCachedThemes(themes)
+                }
+
 
                 themes
             } else {
