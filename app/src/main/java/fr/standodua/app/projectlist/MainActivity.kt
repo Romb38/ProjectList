@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -104,8 +105,6 @@ class MainActivity : ComponentActivity() {
         setFullScreen()
     }
 }
-// [TODO] Need to space a bit the settings button and refresh button
-// [TODO] Need to reduce category boxes sizes
 @Composable
 fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) {
 
@@ -261,35 +260,15 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                     .padding(horizontal = 16.dp)
                     .height(100.dp) // Ajustez la hauteur en fonction des besoins
             ) {
-                // Conteneur pour le bouton de mise à jour et le bouton des paramètres
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp) // Ajoute un peu d'espace horizontalement si nécessaire
+                        .padding(horizontal = 16.dp)
                 ) {
-                    // Bouton des paramètres en couche différente, aligné à droite
-                    IconButton(
-                        onClick = {
-                            // Ajoutez votre logique de navigation ici
-                            navController.navigate("settings")
-                        },
-                        modifier = Modifier
-                            .size(150.dp)
-                            .align(Alignment.CenterEnd) // Aligne le bouton des paramètres à droite
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Settings",
-                            tint = Color.LightGray,
-                            modifier = Modifier.size(38.dp)
-                        )
-                    }
-
-                    // Ajouter un Spacer pour éloigner les deux boutons
+                    // Spacer qui occupe la première partie
                     Spacer(
                         modifier = Modifier
-                            .align(Alignment.Center)
-                            .width(130.dp) // Ajustez la largeur du Spacer selon vos besoins
+                            .weight(1f) // Prend 1/3 de la largeur
                     )
 
                     // Bouton carré pour mettre à jour un ListItemBox, centré
@@ -298,8 +277,8 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                             updateData()
                         },
                         modifier = Modifier
-                            .size(100.dp)
-                            .align(Alignment.Center), // Assure le centrage dans la Box
+                            .weight(1f) // Prend 1/3 de la largeur
+                            .aspectRatio(1f), // Assure que le bouton reste carré
                         colors = ButtonDefaults.buttonColors(
                             containerColor = colorResource(R.color.my_yellow),
                             contentColor = Color.White
@@ -311,6 +290,25 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                             contentDescription = "Refresh",
                             tint = Color.White,
                             modifier = Modifier.size(48.dp)
+                        )
+                    }
+
+                    // Bouton des paramètres, aligné à droite dans la troisième partie
+                    IconButton(
+                        onClick = {
+                            // Logique de navigation
+                            navController.navigate("settings")
+                        },
+                        modifier = Modifier
+                            .weight(1f) // Prend 1/3 de la largeur
+                            .align(Alignment.CenterVertically) // Assure l'alignement vertical au centre
+                            .fillMaxWidth(), // Remplit toute la largeur disponible dans la part assignée
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings",
+                            tint = Color.LightGray,
+                            modifier = Modifier.size(38.dp)
                         )
                     }
                 }
@@ -340,7 +338,7 @@ fun ListItemBox(text: String, color: Color, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(180.dp)
+            .height(167.dp) // Hauteur ajustée pour afficher 3,5 éléments
             .background(colorResource(R.color.my_red), shape = RoundedCornerShape(40.dp))
             .padding(16.dp), contentAlignment = Alignment.Center
     ) {
@@ -350,7 +348,6 @@ fun ListItemBox(text: String, color: Color, modifier: Modifier = Modifier) {
                 .padding(4.dp)
                 .background(Color.White, shape = RoundedCornerShape(30.dp))
         ) {
-
             Row(
                 modifier = Modifier
                     .fillMaxSize()
