@@ -1,11 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Création de Catégories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            gap: 60px; /* Augmentation de l'espace entre les colonnes */
+            flex-wrap: wrap;
+        }
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+        }
+        .category-list-container {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        .category-list {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .category-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .category-item button {
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: 20px; /* Réduit l'espace entre les colonnes sur petits écrans */
+            }
+            .category-list-container {
+                max-width: none;
+            }
+        }
+    </style>
 </head>
 <body>
-    <p>Hello World</p>
+    <div class="container">
+        <div class="form-container">
+            <h1>Ajouter ou Modifier une Catégorie</h1>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="text">Texte de la catégorie :</label>
+                    <input type="text" id="text" name="text" required>
+                </div>
+                <div class="form-group">
+                    <label for="difficulty">Difficulté :</label>
+                    <input type="number" id="difficulty" name="difficulty" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="theme">Thème :</label>
+                    <select id="theme" name="theme" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="lang">Langue :</label>
+                    <select id="lang" name="lang" required></select>
+                </div>
+                <input type="hidden" id="editIndex">
+                <button type="submit">Ajouter/Modifier</button>
+                <button type="button" id="exportButton">Exporter</button> <!-- Déplacé ici -->
+            </form>
+        </div>
+        <div class="category-list-container">
+            <h1>Catégories Créées</h1>
+            <div class="category-list" id="categoryList"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
 </body>
 </html>
