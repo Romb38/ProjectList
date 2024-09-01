@@ -183,10 +183,9 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
     }
 
     // Utiliser LaunchedEffect pour appeler updateData lorsque le composable est initialisé
-    // [TODO] A tester si les données du mode famille sont bien utilisée
     LaunchedEffect(Unit) {
         val url = FAM_THME_URL
-        val fetchedLanguages = fetchStringFromJson(url, true) ?: emptyList()
+        val fetchedLanguages = fetchStringFromJson(url, false, true) ?: emptyList()
         Log.d("LanguageLoad", "Fetched languages: $fetchedLanguages")
         familyModeThemes = fetchedLanguages.toSet()
 

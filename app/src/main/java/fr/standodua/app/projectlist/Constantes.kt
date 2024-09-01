@@ -13,8 +13,8 @@ object Constants {
     const val LANG_URL = "https://raw.githubusercontent.com/Romb38/ProjectList/updatedMain/lang.json"
 
     // URL de base pour les thématiques non-famille
-    // [TODO] Placer ici la bonne URL
-    const val FAM_THME_URL = ""
+    // [TODO] Placer ici la bonne URL (pour l'instant ce n'est pas celle du main)
+    const val FAM_THME_URL = "https://raw.githubusercontent.com/Romb38/ProjectList/updatedMain/family_theme.json"
 
 
 }

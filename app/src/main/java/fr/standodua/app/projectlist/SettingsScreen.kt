@@ -405,7 +405,7 @@ fun FullWidthClickableText(text : String,onClick: () -> Unit) {
     }
 }
 
-// [TODO] Réfléchir au fonctionnement du family mode
+// [TODO] Tester le fonctionnement du family mode
 @Composable
 fun FamilyModeItem(context: Context) {
     // Accéder à SharedPreferences
@@ -443,8 +443,11 @@ fun FamilyModeItem(context: Context) {
                 }
             },
             colors = SwitchDefaults.colors(
-                checkedThumbColor = colorResource(id = R.color.my_cyan),
-                uncheckedThumbColor = Color.LightGray
+                checkedThumbColor = colorResource(id = R.color.my_red),
+                uncheckedThumbColor = Color.Gray,
+                checkedTrackColor = colorResource(id = R.color.light_red),
+                uncheckedTrackColor = Color.LightGray // Couleur du fond (track) désactivé
+
             )
         )
     }
