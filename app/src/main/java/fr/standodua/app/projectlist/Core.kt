@@ -23,12 +23,23 @@ object Cache {
     @Volatile
     private var cachedCategories: List<Category>? = null
 
+    @Volatile
+    private var cachedThemes : List<String>? = null
+
     fun getCachedCategories(): List<Category>? {
         return cachedCategories
     }
 
     fun setCachedCategories(categories: List<Category>) {
         cachedCategories = categories
+    }
+
+    fun getCachedThemes(): List<String>? {
+        return cachedThemes
+    }
+
+    fun setCachedThemes(themes: List<String>) {
+        cachedThemes = themes
     }
 }
 
@@ -72,6 +83,48 @@ suspend fun fetchCategoriesFromJson(): List<Category>? {
     }
 }
 
+
+suspend fun fetchStringFromJson(url: String): List<String>? {
+    // Vérifier si les données sont déjà en cache
+    Cache.getCachedThemes()?.let {
+        Log.d("Cache", "Returning cached data")
+        return it
+    }
+
+    val client = OkHttpClient()
+    val request = Request.Builder()
+        .url(url)
+        .build()
+
+    return withContext(Dispatchers.IO) {
+        try {
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                val json = response.body?.string()
+                Log.d("NetworkResponse", "Response body: $json")
+
+                val gson = Gson()
+                val themeType = object : TypeToken<List<String>>() {}.type
+                val themes = gson.fromJson<List<String>>(json, themeType)
+
+                // Mettre les données en cache
+                Cache.setCachedThemes(themes)
+
+                themes
+            } else {
+                Log.e("NetworkResponse", "Request failed with status code: ${response.code}")
+                null
+            }
+        } catch (e: IOException) {
+            Log.e("NetworkError", "Error fetching data", e)
+            null
+        }
+    }
+}
+
+
+
+
 // Fonction pour obtenir une catégorie au hasard basée sur la difficulté et les thèmes
 fun getRandomCategory(
     categories: List<Category>,
@@ -93,6 +146,7 @@ fun getRandomCategory(
 
 // Fonction principale pour exécuter le code
 fun getData(): List<Category>? = runBlocking {
+
     val categories = fetchCategoriesFromJson() ?: return@runBlocking null
 
     // Liste pour stocker les catégories sélectionnées
@@ -102,6 +156,7 @@ fun getData(): List<Category>? = runBlocking {
     val usedThemes = mutableSetOf<String>()
 
     // Boucle sur les valeurs de difficulté 1, 2, 3
+    //[TODO] Prendre en compte les paramètres (mode famille, langues ...)
     for (difficulty in 1..MAX_DIFFICULTY) {
         // Obtenir une catégorie correspondant à la difficulté et excluant les thèmes déjà utilisés
         val category = getRandomCategory(

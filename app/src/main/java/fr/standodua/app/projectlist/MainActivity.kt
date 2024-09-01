@@ -34,7 +34,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -53,7 +52,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fr.standodua.app.projectlist.Constants.MAX_DIFFICULTY
+import fr.standodua.app.projectlist.Shared.chosen_difficulty
+import fr.standodua.app.projectlist.Shared.isFamilyMode
+import fr.standodua.app.projectlist.Shared.languageBlacklist
+import fr.standodua.app.projectlist.Shared.themeBlackList
 import fr.standodua.app.projectlist.ui.theme.ProjectListTheme
 
 
@@ -85,6 +87,12 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
     val context = LocalContext.current
     val sharedPreferences = remember { context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
 
+    // On récupère les valeurs dans le cache de l'application
+    chosen_difficulty = sharedPreferences.getInt("difficulty_value", chosen_difficulty)
+    languageBlacklist = sharedPreferences.getStringSet("language_blacklist", emptySet()) ?: emptySet()
+    themeBlackList = sharedPreferences.getStringSet("theme_blacklist", emptySet()) ?: emptySet()
+    isFamilyMode = sharedPreferences.getBoolean("family_mode", true)
+
     // Toujours remettre isDialogShown à true au démarrage
     val isDialogShown = rememberSaveable {
         mutableStateOf(true)
@@ -99,7 +107,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
 
     // Tableau pour les textes des ListItemBox
     val textArray = remember {
-        mutableStateOf(Array(MAX_DIFFICULTY) { index ->
+        mutableStateOf(Array(chosen_difficulty) { index ->
             "Catégorie n°${index + 1}" // Génère les chaînes "Catégorie n°1", "Catégorie n°2", "Catégorie n°3"
         })
     }
@@ -108,19 +116,19 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
 
     // Fonction pour mettre à jour un ListItemBox
     fun updateListItemBox(text: String, diff: Int) {
-        if (diff in 1..MAX_DIFFICULTY) {
+        if (diff in 1..chosen_difficulty) {
             textArray.value[diff - 1] = text
         }
     }
 
     if (isToast.value.isNotEmpty()) {
-        showToast(isToast.value)
+        ShowToast(isToast.value)
         isToast.value = ""
     }
 
     fun updateData() {
         val datas: List<Category>? = getData()
-        if (datas != null && datas.size == MAX_DIFFICULTY) {
+        if (datas != null && datas.size == chosen_difficulty) {
             // On mets à jour les catégories dans le jeu
             datas.forEach { data ->
                 updateListItemBox(data.text, data.difficulty)
@@ -212,7 +220,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                     .padding(vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp) // Espacement entre les éléments
             ) {
-                items(MAX_DIFFICULTY) { i ->
+                items(chosen_difficulty) { i ->
                     ListItemBox(
                         text = textArray.value[i], color = getColorForDifficulty(i + 1)
                     )
@@ -292,7 +300,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
 
 // Fonction pour afficher un Toast
 @Composable
-fun showToast(message: String) {
+fun ShowToast(message: String) {
     val context = LocalContext.current
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }

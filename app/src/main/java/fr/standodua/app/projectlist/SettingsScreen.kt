@@ -1,6 +1,7 @@
 package fr.standodua.app.projectlist
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -26,13 +25,14 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,14 +43,14 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.standodua.app.projectlist.Constants.LANG_URL
 import fr.standodua.app.projectlist.Constants.MAX_DIFFICULTY
+import fr.standodua.app.projectlist.Constants.THEME_URL
+import fr.standodua.app.projectlist.Shared.chosen_difficulty
 
 
 @Composable
@@ -70,72 +70,107 @@ fun LanguageSelectionDialog(
     onDismissRequest: () -> Unit
 ) {
     val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    val languageOptions = listOf("Français", "English", "Español")
-    val selectedLanguages = remember {
-        mutableStateOf(languageOptions.toSet())
+
+    // États pour les langues et la blacklist
+    val languageOptions = remember { mutableStateOf<List<String>>(emptyList()) }
+    val languageBlacklist = remember {
+        mutableStateOf(
+            sharedPreferences.getStringSet("language_blacklist", emptySet()) ?: emptySet()
+        )
     }
 
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = { Text("Sélectionnez des langues") },
-        text = {
-            LazyColumn(
-            ) {
-                items(languageOptions) { language ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable {
-                                if (selectedLanguages.value.contains(language)) {
-                                    selectedLanguages.value = selectedLanguages.value - language
-                                } else {
-                                    selectedLanguages.value = selectedLanguages.value + language
+    // Charger les options de langue en arrière-plan
+    LaunchedEffect(Unit) {
+        val url = LANG_URL
+        val fetchedLanguages = fetchStringFromJson(url) ?: emptyList()
+        Log.d("LanguageLoad", "Fetched languages: $fetchedLanguages")
+        languageOptions.value = fetchedLanguages
+    }
+
+    // Initialiser selectedLanguages en excluant les langues dans la blacklist
+    val selectedLanguages = remember {
+        mutableStateOf(languageOptions.value.toSet() - languageBlacklist.value)
+    }
+
+    // Mettre à jour selectedLanguages lorsque languageOptions ou languageBlacklist changent
+    LaunchedEffect(languageOptions.value, languageBlacklist.value) {
+        selectedLanguages.value = languageOptions.value.toSet() - languageBlacklist.value
+    }
+
+    // Vérifier si les options de langue sont chargées
+    if (languageOptions.value.isEmpty()) {
+        // Afficher un indicateur de chargement pendant le chargement
+        CircularProgressIndicator()
+    } else {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text("Sélectionnez des langues") },
+            text = {
+                LazyColumn {
+                    items(languageOptions.value) { language ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .clickable {
+                                    if (selectedLanguages.value.contains(language)) {
+                                        selectedLanguages.value = selectedLanguages.value - language
+                                        languageBlacklist.value = languageBlacklist.value + language
+                                    } else {
+                                        selectedLanguages.value = selectedLanguages.value + language
+                                        languageBlacklist.value = languageBlacklist.value - language
+                                    }
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = language,
+                                fontSize = 18.sp,
+                                color = Color.White
+                            )
+                            Checkbox(
+                                checked = selectedLanguages.value.contains(language),
+                                onCheckedChange = {
+                                    if (it) {
+                                        selectedLanguages.value = selectedLanguages.value + language
+                                        languageBlacklist.value = languageBlacklist.value - language
+                                    } else {
+                                        selectedLanguages.value = selectedLanguages.value - language
+                                        languageBlacklist.value = languageBlacklist.value + language
+                                    }
                                 }
-                            },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = language,
-                            fontSize = 18.sp,
-                            color = Color.White
-                        )
-                        Checkbox(
-                            checked = selectedLanguages.value.contains(language),
-                            onCheckedChange = {
-                                if (it) {
-                                    selectedLanguages.value = selectedLanguages.value + language
-                                } else {
-                                    selectedLanguages.value = selectedLanguages.value - language
-                                }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    with(sharedPreferences.edit()) {
-                        putStringSet("selected_languages", selectedLanguages.value)
-                        apply()
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        // Sauvegarder les langues sélectionnées et la blacklist
+                        with(sharedPreferences.edit()) {
+                            putStringSet("selected_languages", selectedLanguages.value)
+                            putStringSet("language_blacklist", languageBlacklist.value)
+                            Shared.languageBlacklist = languageBlacklist.value
+                            apply()
+                        }
+                        onDismissRequest()
                     }
-                    onDismissRequest()
+                ) {
+                    Text("OK")
                 }
-            ) {
-                Text("OK")
+            },
+            dismissButton = {
+                Button(onClick = onDismissRequest) {
+                    Text("Annuler")
+                }
+                Spacer(modifier = Modifier.width(20.dp))
             }
-        },
-        dismissButton = {
-            Button(onClick = onDismissRequest) {
-                Text("Annuler")
-            }
-            Spacer(modifier = Modifier.width(20.dp))
-        },
-    )
+        )
+    }
 }
+
 
 
 @Composable
@@ -144,79 +179,119 @@ fun ThemeSelectionDialog(
     onDismissRequest: () -> Unit
 ) {
     val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    val themeOptions = listOf("Theme1", "Theme2", "Theme3")
-    val selectedTheme = remember {
-        mutableStateOf(themeOptions.toSet())
+
+    // États pour les thèmes et la blacklist
+    val themeOptions = remember { mutableStateOf<List<String>>(emptyList()) }
+    val themeBlacklist = remember {
+        mutableStateOf(
+            sharedPreferences.getStringSet("theme_blacklist", emptySet()) ?: emptySet()
+        )
     }
 
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = { Text("Sélectionnez des langues") },
-        text = {
-            LazyColumn(
-            ) {
-                items(themeOptions) { theme ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable {
-                                if (selectedTheme.value.contains(theme)) {
-                                    selectedTheme.value = selectedTheme.value - theme
-                                } else {
-                                    selectedTheme.value = selectedTheme.value + theme
+    // Charger les thèmes en arrière-plan
+    LaunchedEffect(Unit) {
+        val url = THEME_URL
+        val fetchedThemes = fetchStringFromJson(url) ?: emptyList()
+        Log.d("ThemeLoad", "Fetched themes: $fetchedThemes")
+        themeOptions.value = fetchedThemes
+    }
+
+    // Initialiser selectedTheme en excluant les thèmes dans la blacklist
+    val selectedTheme = remember {
+        mutableStateOf(themeOptions.value.toSet() - themeBlacklist.value)
+    }
+
+    // Mettre à jour selectedTheme lorsque themeOptions ou themeBlacklist changent
+    LaunchedEffect(themeOptions.value, themeBlacklist.value) {
+        selectedTheme.value = themeOptions.value.toSet() - themeBlacklist.value
+    }
+
+    // Vérifier si les thèmes sont chargés
+    if (themeOptions.value.isEmpty()) {
+        // Afficher un indicateur de chargement pendant le chargement
+        CircularProgressIndicator()
+    } else {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = { Text("Sélectionnez des thèmes") },
+            text = {
+                LazyColumn {
+                    items(themeOptions.value) { theme ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .clickable {
+                                    if (selectedTheme.value.contains(theme)) {
+                                        selectedTheme.value = selectedTheme.value - theme
+                                        themeBlacklist.value = themeBlacklist.value + theme
+                                    } else {
+                                        selectedTheme.value = selectedTheme.value + theme
+                                        themeBlacklist.value = themeBlacklist.value - theme
+                                    }
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = theme,
+                                fontSize = 18.sp,
+                                color = Color.White
+                            )
+                            Checkbox(
+                                checked = selectedTheme.value.contains(theme),
+                                onCheckedChange = {
+                                    if (it) {
+                                        selectedTheme.value = selectedTheme.value + theme
+                                        themeBlacklist.value = themeBlacklist.value - theme
+                                    } else {
+                                        selectedTheme.value = selectedTheme.value - theme
+                                        themeBlacklist.value = themeBlacklist.value + theme
+                                    }
                                 }
-                            },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = theme,
-                            fontSize = 18.sp,
-                            color = Color.White
-                        )
-                        Checkbox(
-                            checked = selectedTheme.value.contains(theme),
-                            onCheckedChange = {
-                                if (it) {
-                                    selectedTheme.value = selectedTheme.value + theme
-                                } else {
-                                    selectedTheme.value = selectedTheme.value - theme
-                                }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    with(sharedPreferences.edit()) {
-                        putStringSet("selected_languages", selectedTheme.value)
-                        apply()
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        // Sauvegarder les thèmes sélectionnés et la blacklist
+                        with(sharedPreferences.edit()) {
+                            putStringSet("selected_themes", selectedTheme.value)
+                            putStringSet("theme_blacklist", themeBlacklist.value)
+                            Shared.themeBlackList = themeBlacklist.value
+                            apply()
+                        }
+                        onDismissRequest()
                     }
-                    onDismissRequest()
+                ) {
+                    Text("OK")
                 }
-            ) {
-                Text("OK")
+            },
+            dismissButton = {
+                Button(onClick = onDismissRequest) {
+                    Text("Annuler")
+                }
             }
-        },
-        dismissButton = {
-            Button(onClick = onDismissRequest) {
-                Text("Annuler")
-            }
-            Spacer(modifier = Modifier.width(20.dp))
-        },
-    )
+        )
+    }
 }
+
+
+
 
 @Composable
 fun ValueSelector(
+    context: Context, // Ajouter le contexte comme paramètre
     value: Int,
     onValueChange: (Int) -> Unit,
     maxValue: Int
 ) {
+    // Obtenez SharedPreferences
+    val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -226,13 +301,14 @@ fun ValueSelector(
     ) {
         // Texte à gauche
         Text(
-            text = "Diffilcuté maximale",
+            text = "Difficulté maximale",
             fontSize = 20.sp,
             color = Color.White,
             modifier = Modifier
                 .weight(1f) // Permet au texte de prendre toute la place disponible avant les contrôles
                 .padding(end = 16.dp) // Espace entre le texte et les contrôles
         )
+
         // Conteneur pour les contrôles de valeur (boutons et cadre de texte)
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -241,7 +317,14 @@ fun ValueSelector(
             IconButton(
                 onClick = {
                     if (value > 0) {
-                        onValueChange((value - 1).coerceAtLeast(0))
+                        val newValue = (value - 1).coerceAtLeast(0)
+                        onValueChange(newValue)
+
+                        // Enregistrer la nouvelle valeur dans SharedPreferences
+                        with(sharedPreferences.edit()) {
+                            putInt("difficulty_value", newValue)
+                            apply()
+                        }
                     }
                 },
                 enabled = value > 0,
@@ -276,7 +359,14 @@ fun ValueSelector(
             IconButton(
                 onClick = {
                     if (value < maxValue) {
-                        onValueChange((value + 1).coerceAtMost(maxValue))
+                        val newValue = (value + 1).coerceAtMost(maxValue)
+                        onValueChange(newValue)
+
+                        // Enregistrer la nouvelle valeur dans SharedPreferences
+                        with(sharedPreferences.edit()) {
+                            putInt("difficulty_value", newValue)
+                            apply()
+                        }
                     }
                 },
                 enabled = value < maxValue,
@@ -317,9 +407,14 @@ fun FullWidthClickableText(text : String,onClick: () -> Unit) {
 
 
 @Composable
-fun FamilyModeItem() {
-    // Variable pour suivre l'état du switch
-    val isFamilyModeEnabled = remember { mutableStateOf(false) }
+fun FamilyModeItem(context: Context) {
+    // Accéder à SharedPreferences
+    val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+    // Charger l'état initial du switch à partir de SharedPreferences
+    val isFamilyModeEnabled = remember {
+        mutableStateOf(sharedPreferences.getBoolean("family_mode", true))
+    }
 
     // Row pour contenir le texte et le switch
     Row(
@@ -337,7 +432,16 @@ fun FamilyModeItem() {
 
         Switch(
             checked = isFamilyModeEnabled.value,
-            onCheckedChange = { isFamilyModeEnabled.value = it },
+            onCheckedChange = { isChecked ->
+                // Mettre à jour l'état du switch
+                isFamilyModeEnabled.value = isChecked
+
+                // Enregistrer l'état du switch dans SharedPreferences
+                with(sharedPreferences.edit()) {
+                    putBoolean("family_mode", isChecked)
+                    apply()
+                }
+            },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = colorResource(id = R.color.my_cyan),
                 uncheckedThumbColor = Color.LightGray
@@ -350,7 +454,10 @@ fun FamilyModeItem() {
 fun SettingsScreen(onBack: () -> Unit) {
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
-    var difficulty by remember { mutableStateOf(3) }
+
+    val sharedPreferences = LocalContext.current.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+    val savedDifficulty = sharedPreferences.getInt("difficulty_value", chosen_difficulty) // 3 est la valeur par défaut si aucune valeur n'est trouvée
+    var difficulty by remember { mutableStateOf(savedDifficulty) }
 
     Column(
         modifier = Modifier
@@ -391,7 +498,7 @@ fun SettingsScreen(onBack: () -> Unit) {
         ) {
             item {
 
-                FamilyModeItem()
+                FamilyModeItem(context = LocalContext.current)
                 Separator()
             }
 
@@ -404,8 +511,12 @@ fun SettingsScreen(onBack: () -> Unit) {
                 // Exemple de champ de valeur avec boutons
                 ValueSelector(
                     value = difficulty,
-                    onValueChange = { newValue -> difficulty = newValue },
-                    maxValue = MAX_DIFFICULTY
+                    onValueChange = { newValue ->
+                        difficulty = newValue
+                        chosen_difficulty = newValue
+                                    },
+                    maxValue = MAX_DIFFICULTY,
+                    context = LocalContext.current
                 )
                 Separator()
             }
