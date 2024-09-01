@@ -7,7 +7,7 @@ Cet algorithme fournit des catégories personnalisées pour le jeu [Crack List](
 Ces catégories sont proposée par la communauté où généré par IA.
 
 # Auteurs
-Test
+
 Romb38
 
 Amassif

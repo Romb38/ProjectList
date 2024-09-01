@@ -1,18 +1,242 @@
 [
     {
-        "text": "Catégorie 1",
+        "text": "Animal",
         "difficulty": 1,
-        "theme": "theme1"
+        "theme": "Nature",
+        "lang": "francais"
     },
     {
-        "text": "Catégorie 2",
+        "text": "Fruit",
+        "difficulty": 1,
+        "theme": "Nature",
+        "lang": "francais"
+    },
+    {
+        "text": "Fleur",
+        "difficulty": 1,
+        "theme": "Nature",
+        "lang": "francais"
+    },
+    {
+        "text": "Arbre",
         "difficulty": 2,
-        "theme": "theme1"
+        "theme": "Nature",
+        "lang": "francais"
     },
     {
-        "text": "Catégorie 3",
+        "text": "Pays",
+        "difficulty": 2,
+        "theme": "Géographie",
+        "lang": "francais"
+    },
+    {
+        "text": "Capitale",
+        "difficulty": 3,
+        "theme": "Géographie",
+        "lang": "francais"
+    },
+    {
+        "text": "Montagne",
+        "difficulty": 3,
+        "theme": "Géographie",
+        "lang": "francais"
+    },
+    {
+        "text": "Rivière",
+        "difficulty": 2,
+        "theme": "Géographie",
+        "lang": "francais"
+    },
+    {
+        "text": "Prénom masculin",
         "difficulty": 1,
-        "theme": "theme2"
+        "theme": "Prénoms",
+        "lang": "francais"
+    },
+    {
+        "text": "Prénom féminin",
+        "difficulty": 1,
+        "theme": "Prénoms",
+        "lang": "francais"
+    },
+    {
+        "text": "Prénom ancien",
+        "difficulty": 2,
+        "theme": "Prénoms",
+        "lang": "francais"
+    },
+    {
+        "text": "Prénom moderne",
+        "difficulty": 2,
+        "theme": "Prénoms",
+        "lang": "francais"
+    },
+    {
+        "text": "Couleur",
+        "difficulty": 1,
+        "theme": "Art",
+        "lang": "francais"
+    },
+    {
+        "text": "Instrument de musique",
+        "difficulty": 2,
+        "theme": "Art",
+        "lang": "francais"
+    },
+    {
+        "text": "Peintre célèbre",
+        "difficulty": 3,
+        "theme": "Art",
+        "lang": "francais"
+    },
+    {
+        "text": "Genre musical",
+        "difficulty": 2,
+        "theme": "Art",
+        "lang": "francais"
+    },
+    {
+        "text": "Objet",
+        "difficulty": 1,
+        "theme": "Maison",
+        "lang": "francais"
+    },
+    {
+        "text": "Pièce de la maison",
+        "difficulty": 1,
+        "theme": "Maison",
+        "lang": "francais"
+    },
+    {
+        "text": "Meuble",
+        "difficulty": 2,
+        "theme": "Maison",
+        "lang": "francais"
+    },
+    {
+        "text": "Appareil électroménager",
+        "difficulty": 3,
+        "theme": "Maison",
+        "lang": "francais"
+    },
+    {
+        "text": "Animal",
+        "difficulty": 1,
+        "theme": "Nature",
+        "lang": "english"
+    },
+    {
+        "text": "Fruit",
+        "difficulty": 1,
+        "theme": "Nature",
+        "lang": "english"
+    },
+    {
+        "text": "Flower",
+        "difficulty": 1,
+        "theme": "Nature",
+        "lang": "english"
+    },
+    {
+        "text": "Tree",
+        "difficulty": 2,
+        "theme": "Nature",
+        "lang": "english"
+    },
+    {
+        "text": "Country",
+        "difficulty": 2,
+        "theme": "Geography",
+        "lang": "english"
+    },
+    {
+        "text": "Capital",
+        "difficulty": 3,
+        "theme": "Geography",
+        "lang": "english"
+    },
+    {
+        "text": "Mountain",
+        "difficulty": 3,
+        "theme": "Geography",
+        "lang": "english"
+    },
+    {
+        "text": "River",
+        "difficulty": 2,
+        "theme": "Geography",
+        "lang": "english"
+    },
+    {
+        "text": "Male name",
+        "difficulty": 1,
+        "theme": "Names",
+        "lang": "english"
+    },
+    {
+        "text": "Female name",
+        "difficulty": 1,
+        "theme": "Names",
+        "lang": "english"
+    },
+    {
+        "text": "Old-fashioned name",
+        "difficulty": 2,
+        "theme": "Names",
+        "lang": "english"
+    },
+    {
+        "text": "Modern name",
+        "difficulty": 2,
+        "theme": "Names",
+        "lang": "english"
+    },
+    {
+        "text": "Color",
+        "difficulty": 1,
+        "theme": "Art",
+        "lang": "english"
+    },
+    {
+        "text": "Musical instrument",
+        "difficulty": 2,
+        "theme": "Art",
+        "lang": "english"
+    },
+    {
+        "text": "Famous painter",
+        "difficulty": 3,
+        "theme": "Art",
+        "lang": "english"
+    },
+    {
+        "text": "Music genre",
+        "difficulty": 2,
+        "theme": "Art",
+        "lang": "english"
+    },
+    {
+        "text": "Object",
+        "difficulty": 1,
+        "theme": "Home",
+        "lang": "english"
+    },
+    {
+        "text": "Room",
+        "difficulty": 1,
+        "theme": "Home",
+        "lang": "english"
+    },
+    {
+        "text": "Furniture",
+        "difficulty": 2,
+        "theme": "Home",
+        "lang": "english"
+    },
+    {
+        "text": "Appliance",
+        "difficulty": 3,
+        "theme": "Home",
+        "lang": "english"
     }
-
 ]
