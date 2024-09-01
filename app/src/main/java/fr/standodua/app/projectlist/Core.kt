@@ -6,6 +6,10 @@ import com.google.gson.reflect.TypeToken
 import fr.standodua.app.projectlist.Constants.LISTS_URL
 import fr.standodua.app.projectlist.Shared.MAX_DIFFICULTY
 import fr.standodua.app.projectlist.Shared.chosen_difficulty
+import fr.standodua.app.projectlist.Shared.familyModeThemes
+import fr.standodua.app.projectlist.Shared.isFamilyMode
+import fr.standodua.app.projectlist.Shared.languageBlacklist
+import fr.standodua.app.projectlist.Shared.themeBlackList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -31,6 +35,9 @@ object Cache {
     @Volatile
     private var cachedLang : List<String>? = null
 
+    @Volatile
+    private var cachedFamilyTheme : List<String>? = null
+
     fun getCachedCategories(): List<Category>? {
         return cachedCategories
     }
@@ -53,6 +60,14 @@ object Cache {
 
     fun setCachedLang(lang: List<String>) {
         cachedLang = lang
+    }
+
+    fun getCachedFamilyTheme(): List<String>? {
+        return cachedFamilyTheme
+    }
+
+    fun setCachedFamilyTheme(fm: List<String>) {
+        cachedFamilyTheme = fm
     }
 }
 
@@ -97,10 +112,15 @@ suspend fun fetchCategoriesFromJson(): List<Category>? {
 }
 
 
-suspend fun fetchStringFromJson(url: String, isLang : Boolean): List<String>? {
+suspend fun fetchStringFromJson(url: String, isLang : Boolean, isFamily : Boolean = false): List<String>? {
     // Vérifier si les données sont déjà en cache
     if (isLang){
         Cache.getCachedLang()?.let{
+            Log.d("Cache", "Returning cached data")
+            return it
+        }
+    } else if (isFamily){
+        Cache.getCachedFamilyTheme()?.let{
             Log.d("Cache", "Returning cached data")
             return it
         }
@@ -130,6 +150,8 @@ suspend fun fetchStringFromJson(url: String, isLang : Boolean): List<String>? {
                 // Mettre les données en cache
                 if (isLang){
                     Cache.setCachedLang(themes)
+                } else if (isFamily){
+                    Cache.setCachedFamilyTheme(themes)
                 } else {
                     Cache.setCachedThemes(themes)
                 }
@@ -150,15 +172,18 @@ suspend fun fetchStringFromJson(url: String, isLang : Boolean): List<String>? {
 
 
 
-// Fonction pour obtenir une catégorie au hasard basée sur la difficulté et les thèmes
+// Fonction pour obtenir une catégorie au hasard basée sur la difficulté, les thèmes et les langues exclues
 fun getRandomCategory(
     categories: List<Category>,
     difficulty: Int,
-    excludedThemes: List<String> = emptyList()
+    excludedThemes: List<String> = emptyList(),
+    excludedLanguages: List<String> = emptyList()
 ): Category? {
-    // Filtrer les catégories selon la difficulté et exclure celles des thèmes donnés
+    // Filtrer les catégories selon la difficulté, les thèmes exclus et les langues exclues
     val filteredCategories = categories.filter { category ->
-        category.difficulty == difficulty && !excludedThemes.contains(category.theme)
+        category.difficulty == difficulty &&
+                !excludedThemes.contains(category.theme) &&
+                !excludedLanguages.contains(category.lang)
     }
 
     // Sélectionner une catégorie au hasard parmi les catégories filtrées
@@ -188,16 +213,23 @@ fun getData(): List<Category>? = runBlocking {
     val selectedCategories = mutableListOf<Category>()
 
     // Liste pour suivre les thèmes déjà utilisés
-    val usedThemes = mutableSetOf<String>()
+    val usedThemes: MutableSet<String> = themeBlackList.toMutableSet()
+
+    if (isFamilyMode){
+        Log.d("getCategory","Le mode famille est activé !")
+        usedThemes.addAll(familyModeThemes)
+    }
+
+    val invalidLanguage: MutableSet<String> = languageBlacklist.toMutableSet()
 
     // Boucle sur les valeurs de difficulté 1, 2, 3
-    //[TODO] Prendre en compte les paramètres (mode famille, langues ...)
     for (difficulty in 1..MAX_DIFFICULTY) {
         // Obtenir une catégorie correspondant à la difficulté et excluant les thèmes déjà utilisés
         val category = getRandomCategory(
             categories = categories,
             difficulty = difficulty,
-            excludedThemes = usedThemes.toList()
+            excludedThemes = usedThemes.toList(),
+            excludedLanguages = invalidLanguage.toList()
         )
 
         if (category != null) {

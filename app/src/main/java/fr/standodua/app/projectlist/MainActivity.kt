@@ -56,7 +56,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.standodua.app.projectlist.Constants.FAM_THME_URL
+import fr.standodua.app.projectlist.Constants.LANG_URL
 import fr.standodua.app.projectlist.Shared.chosen_difficulty
+import fr.standodua.app.projectlist.Shared.familyModeThemes
 import fr.standodua.app.projectlist.Shared.isFamilyMode
 import fr.standodua.app.projectlist.Shared.languageBlacklist
 import fr.standodua.app.projectlist.Shared.themeBlackList
@@ -116,6 +119,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
     languageBlacklist = sharedPreferences.getStringSet("language_blacklist", emptySet()) ?: emptySet()
     themeBlackList = sharedPreferences.getStringSet("theme_blacklist", emptySet()) ?: emptySet()
     isFamilyMode = sharedPreferences.getBoolean("family_mode", true)
+    familyModeThemes = sharedPreferences.getStringSet("family_theme", emptySet()) ?: emptySet()
 
     // Toujours remettre isDialogShown à true au démarrage
     val isDialogShown = rememberSaveable {
@@ -179,7 +183,13 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
     }
 
     // Utiliser LaunchedEffect pour appeler updateData lorsque le composable est initialisé
+    // [TODO] A tester si les données du mode famille sont bien utilisée
     LaunchedEffect(Unit) {
+        val url = FAM_THME_URL
+        val fetchedLanguages = fetchStringFromJson(url, true) ?: emptyList()
+        Log.d("LanguageLoad", "Fetched languages: $fetchedLanguages")
+        familyModeThemes = fetchedLanguages.toSet()
+
         updateData()
         with(sharedPreferences.edit()) {
             remove("dialog_shown")
