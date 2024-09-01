@@ -48,8 +48,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.standodua.app.projectlist.Constants.LANG_URL
-import fr.standodua.app.projectlist.Constants.MAX_DIFFICULTY
 import fr.standodua.app.projectlist.Constants.THEME_URL
+import fr.standodua.app.projectlist.Shared.MAX_DIFFICULTY
 import fr.standodua.app.projectlist.Shared.chosen_difficulty
 
 
@@ -456,7 +456,17 @@ fun SettingsScreen(onBack: () -> Unit) {
     var showThemeDialog by remember { mutableStateOf(false) }
 
     val sharedPreferences = LocalContext.current.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    val savedDifficulty = sharedPreferences.getInt("difficulty_value", chosen_difficulty) // 3 est la valeur par défaut si aucune valeur n'est trouvée
+    var savedDifficulty = sharedPreferences.getInt("difficulty_value", chosen_difficulty) // 3 est la valeur par défaut si aucune valeur n'est trouvée
+
+    // Si la valeur est supérieur a la valeur maximale dès le départ on la redescend
+    if (savedDifficulty > MAX_DIFFICULTY){
+        savedDifficulty = MAX_DIFFICULTY
+        with(sharedPreferences.edit()) {
+            putInt("difficulty_value", MAX_DIFFICULTY)
+            apply()
+        }
+    }
+
     var difficulty by remember { mutableStateOf(savedDifficulty) }
 
     Column(

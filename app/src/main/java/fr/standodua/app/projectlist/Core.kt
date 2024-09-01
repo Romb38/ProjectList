@@ -4,7 +4,8 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import fr.standodua.app.projectlist.Constants.LISTS_URL
-import fr.standodua.app.projectlist.Constants.MAX_DIFFICULTY
+import fr.standodua.app.projectlist.Shared.MAX_DIFFICULTY
+import fr.standodua.app.projectlist.Shared.chosen_difficulty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -16,7 +17,8 @@ import java.io.IOException
 data class Category(
     val text: String,
     val difficulty: Int,
-    val theme: String
+    val theme: String,
+    val lang : String
 )
 
 object Cache {
@@ -148,6 +150,16 @@ fun getRandomCategory(
 fun getData(): List<Category>? = runBlocking {
 
     val categories = fetchCategoriesFromJson() ?: return@runBlocking null
+
+    //On update la valeur maximale pour la difficultée
+    categories.forEach {categorie ->
+        if (categorie.difficulty > MAX_DIFFICULTY) {
+            MAX_DIFFICULTY = categorie.difficulty
+        }
+    }
+    if (chosen_difficulty > MAX_DIFFICULTY){
+        chosen_difficulty = MAX_DIFFICULTY
+    }
 
     // Liste pour stocker les catégories sélectionnées
     val selectedCategories = mutableListOf<Category>()
