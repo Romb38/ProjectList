@@ -38,9 +38,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,7 +59,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.standodua.app.projectlist.Constants.FAM_THME_URL
-import fr.standodua.app.projectlist.Constants.LANG_URL
 import fr.standodua.app.projectlist.Shared.chosen_difficulty
 import fr.standodua.app.projectlist.Shared.familyModeThemes
 import fr.standodua.app.projectlist.Shared.isFamilyMode
@@ -113,6 +114,8 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
 
     val context = LocalContext.current
     val sharedPreferences = remember { context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
+
+    var refreshKey by remember { mutableStateOf(0) }
 
     // On récupère les valeurs dans le cache de l'application
     chosen_difficulty = sharedPreferences.getInt("difficulty_value", chosen_difficulty)
@@ -183,7 +186,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
     }
 
     // Utiliser LaunchedEffect pour appeler updateData lorsque le composable est initialisé
-    LaunchedEffect(Unit) {
+    LaunchedEffect(refreshKey) {
         val url = FAM_THME_URL
         val fetchedLanguages = fetchStringFromJson(url, false, true) ?: emptyList()
         Log.d("LanguageLoad", "Fetched languages: $fetchedLanguages")
@@ -284,6 +287,7 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
                     Button(
                         onClick = {
                             updateData()
+                            refreshKey++  // Incrémente refreshKey pour provoquer une recomposition
                         },
                         modifier = Modifier
                             .weight(1f) // Prend 1/3 de la largeur

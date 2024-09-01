@@ -223,7 +223,7 @@ fun getData(): List<Category>? = runBlocking {
     val invalidLanguage: MutableSet<String> = languageBlacklist.toMutableSet()
 
     // Boucle sur les valeurs de difficulté 1, 2, 3
-    for (difficulty in 1..MAX_DIFFICULTY) {
+    for (difficulty in 1..chosen_difficulty) {
         // Obtenir une catégorie correspondant à la difficulté et excluant les thèmes déjà utilisés
         val category = getRandomCategory(
             categories = categories,
