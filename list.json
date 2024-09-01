@@ -2,17 +2,20 @@
     {
         "text": "Catégorie 1",
         "difficulty": 1,
-        "theme": "theme1"
+        "theme": "theme1",
+        "lang" : "francais"
     },
     {
         "text": "Catégorie 2",
         "difficulty": 2,
-        "theme": "theme1"
+        "theme": "theme1",
+        "lang" : "francais"
     },
     {
         "text": "Catégorie 3",
         "difficulty": 1,
-        "theme": "theme2"
+        "theme": "theme2",
+        "lang" : "anglais"
     }
 
 ]
