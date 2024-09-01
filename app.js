@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Charger les thèmes et les langues
-    fetch('https://raw.githubusercontent.com/Romb38/ProjectList/updatedMain/theme.json')
+    fetch('https://raw.githubusercontent.com/Romb38/ProjectList/main/theme.json')
         .then(response => response.json())
         .then(data => {
             data.forEach(theme => {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
             themeSelect.value = lastUsedTheme || themeSelect.options[0].value;
         });
 
-    fetch('https://raw.githubusercontent.com/Romb38/ProjectList/updatedMain/lang.json')
+    fetch('https://raw.githubusercontent.com/Romb38/ProjectList/main/lang.json')
         .then(response => response.json())
         .then(data => {
             data.forEach(lang => {
