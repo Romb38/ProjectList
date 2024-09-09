@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "fr.standodua.app.projectlist"
+    namespace = "fr.standouda.app.projectlist"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "fr.standodua.app.projectlist"
+        applicationId = "fr.standouda.app.projectlist"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
