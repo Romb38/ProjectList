@@ -1,5 +1,0 @@
-- Tester l'application
-- Si application fonctionnelle
-    - Ajouter application au store
-- Ajouter feature :
-    - Pouvoir jouer avec ses propres fichiers de listes
