@@ -14,7 +14,8 @@ object Constants {
     // URL de base pour les thématiques non-famille
     const val FAM_THME_URL = "https://raw.githubusercontent.com/Romb38/ProjectList/main/family_theme.json"
 
-
+    // URL du créateur de catégorie
+    const val CREATOR_URL = "https://romb38.github.io/ProjectList/"
 }
 
 object Shared{

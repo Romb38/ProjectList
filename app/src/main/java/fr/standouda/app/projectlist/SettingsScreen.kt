@@ -1,6 +1,8 @@
 package fr.standouda.app.projectlist
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,7 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fr.standouda.app.projectlist.R
+import fr.standouda.app.projectlist.Constants.CREATOR_URL
 import fr.standouda.app.projectlist.Constants.LANG_URL
 import fr.standouda.app.projectlist.Constants.THEME_URL
 import fr.standouda.app.projectlist.Shared.MAX_DIFFICULTY
@@ -93,6 +95,7 @@ fun LanguageSelectionDialog(
         mutableStateOf(languageOptions.value.toSet() - languageBlacklist.value)
     }
 
+
     // Mettre à jour selectedLanguages lorsque languageOptions ou languageBlacklist changent
     LaunchedEffect(languageOptions.value, languageBlacklist.value) {
         selectedLanguages.value = languageOptions.value.toSet() - languageBlacklist.value
@@ -101,7 +104,12 @@ fun LanguageSelectionDialog(
     // Vérifier si les options de langue sont chargées
     if (languageOptions.value.isEmpty()) {
         // Afficher un indicateur de chargement pendant le chargement
-        CircularProgressIndicator()
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center // Aligne au centre de la box
+        ) {
+            CircularProgressIndicator() // Indicateur de chargement centré
+        }
     } else {
         AlertDialog(
             onDismissRequest = onDismissRequest,
@@ -210,7 +218,12 @@ fun ThemeSelectionDialog(
     // Vérifier si les thèmes sont chargés
     if (themeOptions.value.isEmpty()) {
         // Afficher un indicateur de chargement pendant le chargement
-        CircularProgressIndicator()
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center // Aligne au centre de la box
+        ) {
+            CircularProgressIndicator() // Indicateur de chargement centré
+        }
     } else {
         AlertDialog(
             onDismissRequest = onDismissRequest,
@@ -391,7 +404,7 @@ fun FullWidthClickableText(text : String,onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .heightIn(80.dp,80.dp)
+            .heightIn(80.dp, 80.dp)
             .clickable(onClick = onClick) // Rendre le texte cliquable
             .background(Color.Transparent), // Fond transparent pour éviter des effets de bord indésirables
         contentAlignment = Alignment.CenterStart // Alignement du texte à gauche
@@ -455,6 +468,9 @@ fun FamilyModeItem(context: Context) {
 
 @Composable
 fun SettingsScreen(onBack: () -> Unit) {
+
+    val context = LocalContext.current
+
     var showLanguageDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var isWIP by remember { mutableStateOf(false) }
@@ -470,6 +486,13 @@ fun SettingsScreen(onBack: () -> Unit) {
             apply()
         }
     }
+
+    fun openWebPage(url: String = CREATOR_URL, context: Context) {
+        val uri = Uri.parse(url)
+        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+
+    }
+
 
     var difficulty by remember { mutableStateOf(savedDifficulty) }
 
@@ -543,6 +566,11 @@ fun SettingsScreen(onBack: () -> Unit) {
             item {
                 // [TODO] Faire le fonctionnement de l'import des listes
                 FullWidthClickableText(text = "Importer vos listes (WIP)", onClick = {  isWIP = true })
+                Separator()
+            }
+
+            item {
+                FullWidthClickableText(text = "Créateur de catégories", onClick = {openWebPage(context = context)})
                 Separator()
             }
 
