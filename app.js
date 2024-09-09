@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    // Charger les thèmes
+    // Charger les thèmes depuis une source en ligne
     fetch('https://raw.githubusercontent.com/Romb38/ProjectList/main/theme.json')
         .then(response => response.json())
         .then(data => {
@@ -46,8 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 autoFirst: true
             });
 
-            // Définir le thème sélectionné précédemment ou la première option
+            // Définir le thème sélectionné précédemment ou laisser vide
             themeInput.value = lastUsedTheme || '';
+        })
+        .catch(error => {
+            console.error('Erreur lors du chargement des thèmes:', error);
+            themeList = [];
         });
 
     // Détecter automatiquement la langue lorsqu'on clique sur le bouton Détecter
@@ -95,6 +99,18 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Modifier une catégorie existante
             categories[index] = newCategory;
+        }
+
+        // Ajouter la nouvelle thématique à la liste d'auto-complétion si elle n'existe pas déjà
+        const capitalizedTheme = capitalizeFirstLetter(newCategory.theme);
+        if (!themeList.includes(capitalizedTheme)) {
+            themeList.push(capitalizedTheme);
+            // Mettre à jour Awesomplete avec la nouvelle liste de thèmes
+            new Awesomplete(themeInput, {
+                list: themeList,
+                minChars: 1,
+                autoFirst: true
+            });
         }
 
         // Mettre à jour les valeurs précédentes utilisées
