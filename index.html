@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script src="efficient-language-detector-js/minified/eld.M60.min.js" charset="utf-8"></script>    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.7/awesomplete.min.css" integrity="sha512-1m1MdHD8wSO4wRpoCWr7g90uQgdWmMlF3EEXMPfs95T9EOKc5YyilU0gFQouGe5RcU0vzwBdV5RhG5eTMRz0PQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.7/awesomplete.min.js" integrity="sha512-Pc3/aEr2FIVZhHxe0RAC9SFrd+pxBJHN3pNJfJNTKc2XAFnXUjgQGIh6X935ePSXNMN6rFa3yftxSnZfJE8ZAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Création de Catégories</title>
     <style>
         body {
@@ -91,11 +93,14 @@
                 </div>
                 <div class="form-group">
                     <label for="theme">Thème :</label>
-                    <select id="theme" name="theme" required></select>
+                    <input type="text" id="theme" name="theme" required>
                 </div>
                 <div class="form-group">
                     <label for="lang">Langue :</label>
-                    <select id="lang" name="lang" required></select>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="lang" name="lang" required>
+                        <button type="button" id="detectLangButton">Détecter</button>
+                    </div>
                 </div>
                 <input type="hidden" id="editIndex">
                 <button type="submit">Ajouter/Modifier</button>
@@ -109,6 +114,8 @@
             <div class="category-list" id="categoryList"></div>
         </div>
     </div>
-    <script src="app.js"></script>
+    
+    <!-- Inclure le fichier JavaScript comme module -->
+    <script type="module" src="app.js"></script>
 </body>
 </html>

@@ -1,49 +1,71 @@
+function getLanguageNameInNativeForm(isoCode) {
+    if (typeof isoCode !== 'string' || isoCode.length !== 2) {
+        throw new Error('Invalid ISO language code');
+    }
+
+    try {
+        const displayNames = new Intl.DisplayNames([navigator.language], { type: 'language' });
+        return displayNames.of(isoCode);
+    } catch (error) {
+        console.error('Error retrieving language name:', error);
+        return 'Unknown language';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    const themeSelect = document.getElementById('theme');
-    const langSelect = document.getElementById('lang');
+    const themeInput = document.getElementById('theme');
+    const langInput = document.getElementById('lang');
+    const detectLangButton = document.getElementById('detectLangButton');
     const categoryList = document.getElementById('categoryList');
     const categoryForm = document.getElementById('categoryForm');
     const exportButton = document.getElementById('exportButton');
     const deleteAllButton = document.getElementById('deleteAllButton');
     const errorMessage = document.getElementById('errorMessage');
     const editIndexInput = document.getElementById('editIndex');
+    const textInput = document.getElementById('text');
 
     let categories = [];
     let lastUsedTheme = '';
     let lastUsedLang = '';
     let lastUsedDifficulty = 1; // Valeur par défaut
+    let themeList = [];
 
     // Fonction pour capitaliser la première lettre d'une chaîne
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    // Charger les thèmes et les langues
+    // Charger les thèmes
     fetch('https://raw.githubusercontent.com/Romb38/ProjectList/main/theme.json')
         .then(response => response.json())
         .then(data => {
-            data.forEach(theme => {
-                const option = document.createElement('option');
-                option.value = theme;
-                option.textContent = capitalizeFirstLetter(theme);
-                themeSelect.appendChild(option);
+            themeList = data.map(theme => capitalizeFirstLetter(theme));
+            new Awesomplete(themeInput, {
+                list: themeList,
+                minChars: 1,
+                autoFirst: true
             });
+
             // Définir le thème sélectionné précédemment ou la première option
-            themeSelect.value = lastUsedTheme || themeSelect.options[0].value;
+            themeInput.value = lastUsedTheme || '';
         });
 
-    fetch('https://raw.githubusercontent.com/Romb38/ProjectList/main/lang.json')
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(lang => {
-                const option = document.createElement('option');
-                option.value = lang;
-                option.textContent = capitalizeFirstLetter(lang);
-                langSelect.appendChild(option);
-            });
-            // Définir la langue sélectionnée précédemment ou la première option
-            langSelect.value = lastUsedLang || langSelect.options[0].value;
-        });
+    // Détecter automatiquement la langue lorsqu'on clique sur le bouton Détecter
+    detectLangButton.addEventListener('click', () => {
+        const text = textInput.value;
+        console.log('Text:', text);
+        if (text.length > 0) {
+            try {
+                const result = eld.detect(text);
+                const languageName = getLanguageNameInNativeForm(result.language);
+                langInput.value = languageName; // Remplir automatiquement la langue détectée
+            } catch (error) {
+                console.error('Erreur lors de la détection de la langue:', error);
+            }
+        } else {
+            alert('Veuillez entrer un texte pour détecter la langue.');
+        }
+    });
 
     // Ajouter ou modifier une catégorie
     categoryForm.addEventListener('submit', (event) => {
@@ -51,10 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const index = parseInt(editIndexInput.value, 10);
         const newCategory = {
-            text: document.getElementById('text').value,
+            text: textInput.value,
             difficulty: parseInt(document.getElementById('difficulty').value, 10) || lastUsedDifficulty,
-            theme: document.getElementById('theme').value,
-            lang: document.getElementById('lang').value
+            theme: themeInput.value,
+            lang: langInput.value
         };
 
         // Vérifier les doublons uniquement par texte
@@ -109,10 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modifier une catégorie
     window.editCategory = function(index) {
         const category = categories[index];
-        document.getElementById('text').value = category.text;
+        textInput.value = category.text;
         document.getElementById('difficulty').value = category.difficulty || lastUsedDifficulty;
-        document.getElementById('theme').value = category.theme || lastUsedTheme;
-        document.getElementById('lang').value = category.lang || lastUsedLang;
+        themeInput.value = category.theme || lastUsedTheme;
+        langInput.value = category.lang || lastUsedLang;
         editIndexInput.value = index;
     };
 
@@ -132,14 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Exporter les catégories en JSON
     exportButton.addEventListener('click', () => {
-        const json = JSON.stringify(categories, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'categories.json';
-        a.click();
-        URL.revokeObjectURL(url);
+        if (categories.length === 0) {
+            alert('Aucune catégorie à exporter.');
+            return;
+        }
+        const dataStr = JSON.stringify(categories, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+        const exportFileName = 'categories.json';
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileName);
+        linkElement.click();
     });
 
     // Initialiser les valeurs du formulaire avec les valeurs précédemment utilisées
