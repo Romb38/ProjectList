@@ -1,5 +1,4 @@
-// Je cherche un truc de ce genre https://cdn.skypack.dev/eld/minified/eld.M60.min.js
-const { eld } = await import('https://cdn.skypack.dev/eld/minified/eld.M60.min.js');
+const { eld } = await import('eld/minified/eld.M60.min.js');
 
 function getLanguageNameInNativeForm(isoCode) {
     if (typeof isoCode !== 'string' || isoCode.length !== 2) {
