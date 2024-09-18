@@ -1,5 +1,4 @@
-import eld from "eld"
-
+const { eld } = await import('eld')
 
 function getLanguageNameInNativeForm(isoCode) {
     if (typeof isoCode !== 'string' || isoCode.length !== 2) {
