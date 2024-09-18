@@ -1,4 +1,4 @@
-const { eld } = await import('./node_modules/eld')
+const { eld } = await import('./node_modules/eld/src/languageDetector')
 
 function getLanguageNameInNativeForm(isoCode) {
     if (typeof isoCode !== 'string' || isoCode.length !== 2) {
