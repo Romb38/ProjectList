@@ -1,5 +1,6 @@
 import eld from "eld"
 
+
 function getLanguageNameInNativeForm(isoCode) {
     if (typeof isoCode !== 'string' || isoCode.length !== 2) {
         throw new Error('Invalid ISO language code');
