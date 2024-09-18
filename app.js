@@ -1,7 +1,8 @@
 import eld from 'https://cdn.skypack.dev/eld/minified/eld.M60.min.js';
 
 function getLanguageNameInNativeForm(isoCode) {
-    if (typeof isoCode !== 'string' || isoCode.length !== 2) {
+    console.log(typeof isoCode)
+    if (typeof isoCode !== 'string') {
         throw new Error('Invalid ISO language code');
     }
 
@@ -10,7 +11,7 @@ function getLanguageNameInNativeForm(isoCode) {
         return displayNames.of(isoCode);
     } catch (error) {
         console.error('Error retrieving language name:', error);
-        return 'Unknown language';
+        return 'Unknown';
     }
 }
 
