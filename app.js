@@ -1,5 +1,3 @@
-import { eld } from './node_modules/eld/minified/eld.M60.min.js';
-
 function getLanguageNameInNativeForm(isoCode) {
     if (typeof isoCode !== 'string' || isoCode.length !== 2) {
         throw new Error('Invalid ISO language code');
