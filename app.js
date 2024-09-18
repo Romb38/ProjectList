@@ -1,4 +1,4 @@
-const { eld } = await import('./node_modules/eld/src/languageDetector')
+const { eld } = await import('https://cdn.skypack.dev/eld');
 
 function getLanguageNameInNativeForm(isoCode) {
     if (typeof isoCode !== 'string' || isoCode.length !== 2) {
