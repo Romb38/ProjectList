@@ -1,5 +1,4 @@
-// Je cherche un truc de ce genre https://cdn.skypack.dev/eld/minified/eld.M60.min.js
-const { eld } = await import('https://cdn.skypack.dev/eld/minified/eld.M60.min.js');
+import eld from 'https://cdn.skypack.dev/eld/minified/eld.M60.min.js';
 
 function getLanguageNameInNativeForm(isoCode) {
     if (typeof isoCode !== 'string' || isoCode.length !== 2) {
@@ -66,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const result = eld.detect(text);
                 const languageName = getLanguageNameInNativeForm(result.language);
+                console.log(languageName)
                 langInput.value = languageName; // Remplir automatiquement la langue détectée
             } catch (error) {
                 console.error('Erreur lors de la détection de la langue:', error);
