@@ -1,3 +1,4 @@
+
 function getLanguageNameInNativeForm(isoCode) {
     if (typeof isoCode !== 'string' || isoCode.length !== 2) {
         throw new Error('Invalid ISO language code');
@@ -56,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Détecter automatiquement la langue lorsqu'on clique sur le bouton Détecter
     detectLangButton.addEventListener('click', () => {
+        console.log("here")
         const text = textInput.value;
         console.log('Text:', text);
         if (text.length > 0) {
