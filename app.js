@@ -27,18 +27,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const editIndexInput = document.getElementById('editIndex');
     const textInput = document.getElementById('text');
 
-    let categories = [];
+    let categories = JSON.parse(localStorage.getItem('categories')) || [];
     let lastUsedTheme = '';
     let lastUsedLang = '';
-    let lastUsedDifficulty = 1; // Valeur par défaut
+    let lastUsedDifficulty = 1;
     let themeList = [];
 
-    // Fonction pour capitaliser la première lettre d'une chaîne
+    function saveCategories() {
+        localStorage.setItem('categories', JSON.stringify(categories));
+    }
+
     function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    // Charger les thèmes depuis une source en ligne
     fetch('https://raw.githubusercontent.com/Romb38/ProjectList/main/theme.json')
         .then(response => response.json())
         .then(data => {
@@ -48,8 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 minChars: 1,
                 autoFirst: true
             });
-
-            // Définir le thème sélectionné précédemment ou laisser vide
             themeInput.value = lastUsedTheme || '';
         })
         .catch(error => {
@@ -57,17 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
             themeList = [];
         });
 
-    // Détecter automatiquement la langue lorsqu'on clique sur le bouton Détecter
     detectLangButton.addEventListener('click', () => {
-        console.log("here")
         const text = textInput.value;
-        console.log('Text:', text);
         if (text.length > 0) {
             try {
                 const result = eld.detect(text);
                 const languageName = getLanguageNameInNativeForm(result.language);
-                console.log(languageName)
-                langInput.value = languageName; // Remplir automatiquement la langue détectée
+                langInput.value = languageName;
             } catch (error) {
                 console.error('Erreur lors de la détection de la langue:', error);
             }
@@ -76,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Ajouter ou modifier une catégorie
     categoryForm.addEventListener('submit', (event) => {
         event.preventDefault();
 
@@ -88,29 +83,24 @@ document.addEventListener('DOMContentLoaded', () => {
             lang: langInput.value
         };
 
-        // Vérifier les doublons uniquement par texte
         const isDuplicate = categories.some(category => category.text === newCategory.text && category !== categories[index]);
 
         if (isDuplicate) {
             errorMessage.textContent = "Une catégorie avec ce texte existe déjà.";
             return;
         } else {
-            errorMessage.textContent = ""; // Réinitialiser le message d'erreur
+            errorMessage.textContent = "";
         }
 
         if (isNaN(index)) {
-            // Ajouter une nouvelle catégorie
             categories.push(newCategory);
         } else {
-            // Modifier une catégorie existante
             categories[index] = newCategory;
         }
 
-        // Ajouter la nouvelle thématique à la liste d'auto-complétion si elle n'existe pas déjà
         const capitalizedTheme = capitalizeFirstLetter(newCategory.theme);
         if (!themeList.includes(capitalizedTheme)) {
             themeList.push(capitalizedTheme);
-            // Mettre à jour Awesomplete avec la nouvelle liste de thèmes
             new Awesomplete(themeInput, {
                 list: themeList,
                 minChars: 1,
@@ -118,17 +108,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Mettre à jour les valeurs précédentes utilisées
         lastUsedTheme = newCategory.theme;
         lastUsedLang = newCategory.lang;
         lastUsedDifficulty = newCategory.difficulty;
 
+        saveCategories();
         displayCategories();
         categoryForm.reset();
         editIndexInput.value = '';
     });
 
-    // Afficher les catégories
     function displayCategories() {
         categoryList.innerHTML = '';
         categories.forEach((category, index) => {
@@ -149,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Modifier une catégorie
     window.editCategory = function(index) {
         const category = categories[index];
         textInput.value = category.text;
@@ -159,21 +147,20 @@ document.addEventListener('DOMContentLoaded', () => {
         editIndexInput.value = index;
     };
 
-    // Supprimer une catégorie
     window.deleteCategory = function(index) {
         categories.splice(index, 1);
+        saveCategories();
         displayCategories();
     };
 
-    // Supprimer toutes les catégories avec confirmation
     deleteAllButton.addEventListener('click', () => {
         if (confirm('Êtes-vous sûr de vouloir supprimer toutes les catégories ?')) {
             categories = [];
+            saveCategories();
             displayCategories();
         }
     });
 
-    // Exporter les catégories en JSON
     exportButton.addEventListener('click', () => {
         if (categories.length === 0) {
             alert('Aucune catégorie à exporter.');
@@ -189,6 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
         linkElement.click();
     });
 
-    // Initialiser les valeurs du formulaire avec les valeurs précédemment utilisées
     document.getElementById('difficulty').value = lastUsedDifficulty;
+
+    // Charger les catégories stockées au démarrage
+    displayCategories();
 });
