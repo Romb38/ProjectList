@@ -612,7 +612,7 @@
     "lang": "français"
   },
   {
-    "text": "Types d'habitaitons",
+    "text": "Types d'habitations",
     "difficulty": 1,
     "theme": "Objets",
     "lang": "français"
@@ -744,7 +744,7 @@
     "lang": "français"
   },
   {
-    "text": "Noms de boîtes de nuits qui existent (ou pas)",
+    "text": "Noms de boîtes de nuit qui existent (ou pas)",
     "difficulty": 2,
     "theme": "Divertissement",
     "lang": "français"
@@ -936,7 +936,7 @@
     "lang": "français"
   },
   {
-    "text": "Choses qu'on peut lettre dans sa poche",
+    "text": "Choses qu'on peut mettre dans sa poche",
     "difficulty": 1,
     "theme": "Objets",
     "lang": "français"
@@ -1437,6 +1437,978 @@
     "text": "C'est illégal",
     "difficulty": 2,
     "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Endroits où se marier",
+    "difficulty": 1,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Établissements publics",
+    "difficulty": 2,
+    "theme": "Metiers",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser au Moyen Âge",
+    "difficulty": 3,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Les personnes âgées aiment...",
+    "difficulty": 1,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à la Corrida",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Personnages de l'histoire de France",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Tâches de...",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Un cadeau pour la Saint-Valentin",
+    "difficulty": 2,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Villes dont le nom se finit par un Y",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Activités à faire l'hiver à la montagne",
+    "difficulty": 1,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Acronymes de 3 lettres ou plus",
+    "difficulty": 2,
+    "theme": "Langues",
+    "lang": "français"
+  },
+  {
+    "text": "Villes Olympiques",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Mots qui riment en \"ulle\"",
+    "difficulty": 1,
+    "theme": "Expression",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à la Californie",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Sites de vente en ligne",
+    "difficulty": 3,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Choses que l'on fait plusieurs fois par jour",
+    "difficulty": 1,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Invité(e) à un dîner j'apporte un(e)...",
+    "difficulty": 2,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Pays qui riment en \"i\"",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Un cadeau pour la fête des Pères",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fonctionne à l'électricité",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Appareils ménagers",
+    "difficulty": 3,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à Blanche Neige et les 7 nains",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Ça se loue...",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Pays en 2 syllabes",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Un très beau mec",
+    "difficulty": 1,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser au film \"Les Bronzés font du ski\"",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Verbes pour qualifier des cris d'animaux",
+    "difficulty": 3,
+    "theme": "Animaux",
+    "lang": "français"
+  },
+  {
+    "text": "Surnom pour un grand-père ou une grand-mère",
+    "difficulty": 1,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Visibles dans un salon de coiffure",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Choses qui demandent un permis ou une licence",
+    "difficulty": 3,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à un voyage en train",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Dans un casino...",
+    "difficulty": 2,
+    "theme": "Divertissement",
+    "lang": "français"
+  },
+  {
+    "text": "Mers et océans",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "C'est interdit dans l'avion",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Mots qui riment en \"oque\"",
+    "difficulty": 2,
+    "theme": "Expression",
+    "lang": "français"
+  },
+  {
+    "text": "Noms de Banque",
+    "difficulty": 3,
+    "theme": "Marques",
+    "lang": "français"
+  },
+  {
+    "text": "Marques de produits alimentaires",
+    "difficulty": 1,
+    "theme": "Marques",
+    "lang": "français"
+  },
+  {
+    "text": "Visibles dans une salle de théâtre",
+    "difficulty": 2,
+    "theme": "Divertissement",
+    "lang": "français"
+  },
+  {
+    "text": "Villes du sud de la France",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Légumes qui ne sont pas verts",
+    "difficulty": 1,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à Pâques",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Titres honorifiques ou hiérarchiques",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Ça peut avoir des boutons",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait partie d'un vélo",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Courants de peinture",
+    "difficulty": 3,
+    "theme": "Arts",
+    "lang": "français"
+  },
+  {
+    "text": "Ça se mange froid",
+    "difficulty": 1,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Ça s'achète dans une quincaillerie",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Chefs d'État ou de gouvernement",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Types de bateau",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à l'OM",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Pièces de théâtre (qui existent ou pas !)",
+    "difficulty": 3,
+    "theme": "Divertissement",
+    "lang": "français"
+  },
+  {
+    "text": "Noms de petits commerces",
+    "difficulty": 1,
+    "theme": "Marques",
+    "lang": "français"
+  },
+  {
+    "text": "J'aimerais que mon/ma partenaire soit plus...",
+    "difficulty": 2,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Personnages de séries",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Prénoms espagnols",
+    "difficulty": 1,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Sports sans balle ou ballon",
+    "difficulty": 2,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Réalisateurs (rices) de films",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser au couscous",
+    "difficulty": 1,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Jobs étudiants",
+    "difficulty": 2,
+    "theme": "Metiers",
+    "lang": "français"
+  },
+  {
+    "text": "Mots de la pétanque",
+    "difficulty": 3,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Une idée de cadeau à moins de 10€",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Choses que l'on n'utilise qu'une fois",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Personnages de littérature",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Choses qu'on trouve dans une ferme",
+    "difficulty": 1,
+    "theme": "Nature",
+    "lang": "français"
+  },
+  {
+    "text": "Mots formés d'une même double syllabe (ex : coucou)",
+    "difficulty": 2,
+    "theme": "Langues",
+    "lang": "français"
+  },
+  {
+    "text": "Personnalités du monde de la mode",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Quelque chose qui flotte",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Un cadeau de mariage",
+    "difficulty": 2,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Mots du tennis",
+    "difficulty": 3,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "J'aime mes...",
+    "difficulty": 1,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Ça rappelle les années 70",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Villes qui terminent en A",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Jeux de cartes",
+    "difficulty": 1,
+    "theme": "Divertissement",
+    "lang": "français"
+  },
+  {
+    "text": "Manières de mourir",
+    "difficulty": 2,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Mots du foot",
+    "difficulty": 3,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Un cadeau pour la fête des Mères",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Noms de pizzerias (qui existent ou pas...)",
+    "difficulty": 2,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Villes qui riment en \"i\"",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Mots qui riment en \"ousse\"",
+    "difficulty": 1,
+    "theme": "Expression",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à Venise",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Prénoms anglo-saxons",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Mots qui riment en \"èche\"",
+    "difficulty": 1,
+    "theme": "Expression",
+    "lang": "français"
+  },
+  {
+    "text": "Thèmes pour une soirée",
+    "difficulty": 2,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Personnages de l'histoire américaine",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à New York",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Lieux pour faire sa demande en mariage",
+    "difficulty": 2,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Métiers militaires",
+    "difficulty": 3,
+    "theme": "Metiers",
+    "lang": "français"
+  },
+  {
+    "text": "Synonymes de \"Zut !\"",
+    "difficulty": 1,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Ça rappelle les années 90",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Villes d'Asie",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Activités à faire pendant un voyage en bateau",
+    "difficulty": 1,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Parties du corps pour faire un tatouage",
+    "difficulty": 2,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Reptiles",
+    "difficulty": 3,
+    "theme": "Animaux",
+    "lang": "français"
+  },
+  {
+    "text": "Mots qui riment en \"ex\"",
+    "difficulty": 1,
+    "theme": "Expression",
+    "lang": "français"
+  },
+  {
+    "text": "Villes de la côte Atlantique",
+    "difficulty": 2,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser au jazz",
+    "difficulty": 3,
+    "theme": "Musique",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à Star Wars",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Un nom propre qui rime en \"O\"",
+    "difficulty": 2,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Villes d'Angleterre",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Une très belle femme",
+    "difficulty": 1,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à Fort Boyard",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Champions cyclistes",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fonctionne avec des piles",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Parties du corps traitées par la chirurgie esthétique",
+    "difficulty": 2,
+    "theme": "Anatomie",
+    "lang": "français"
+  },
+  {
+    "text": "Villes qui riment en \"o\"",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Prénoms qui riment en \"ain\"",
+    "difficulty": 1,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Marques de bières",
+    "difficulty": 2,
+    "theme": "Marques",
+    "lang": "français"
+  },
+  {
+    "text": "Joueurs (euses) de Tennis célèbres",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Nourritures qui s'achètent en boîte",
+    "difficulty": 1,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Ça s'achète dans un magasin de jouets",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Prénoms composés de célébrités",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser au Monopoly",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Ça n'existait pas avant l'an 2000",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Modèles de voitures",
+    "difficulty": 3,
+    "theme": "Marques",
+    "lang": "français"
+  },
+  {
+    "text": "Ça se coupe en tranches",
+    "difficulty": 1,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à Jean-Jacques Goldman",
+    "difficulty": 2,
+    "theme": "Musique",
+    "lang": "français"
+  },
+  {
+    "text": "Personnages de la seconde guerre mondiale",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Chansons pour danser",
+    "difficulty": 1,
+    "theme": "Musique",
+    "lang": "français"
+  },
+  {
+    "text": "Dans un restaurant japonais",
+    "difficulty": 2,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Mots du solfège",
+    "difficulty": 3,
+    "theme": "Musique",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser au ménage",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Roux et rousses célèbres",
+    "difficulty": 2,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Villes d'Allemagne",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Un mot espagnol que tout le monde connaît",
+    "difficulty": 1,
+    "theme": "Langues",
+    "lang": "français"
+  },
+  {
+    "text": "On l'apprend en cours de maths",
+    "difficulty": 2,
+    "theme": "Langues",
+    "lang": "français"
+  },
+  {
+    "text": "Personnages de \"Monsieur Madame\"",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Garnitures de crêpes",
+    "difficulty": 1,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Ça rappelle les années 80",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Clubs de foot",
+    "difficulty": 3,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Bruit qui fait mal aux oreilles",
+    "difficulty": 1,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Élevage de...",
+    "difficulty": 2,
+    "theme": "Nature",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à la Suède",
+    "difficulty": 3,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Se range sous l'évier",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser au PSG",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Journalistes célèbres",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Ça se mange avec du beurre",
+    "difficulty": 1,
+    "theme": "Cuisine",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à Las Vegas",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Mots de l'Astrologie",
+    "difficulty": 3,
+    "theme": "Langues",
+    "lang": "français"
+  },
+  {
+    "text": "Mots pour décrire un chien",
+    "difficulty": 1,
+    "theme": "Animaux",
+    "lang": "français"
+  },
+  {
+    "text": "Ponts célèbres",
+    "difficulty": 2,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à la Russie",
+    "difficulty": 3,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Activités à faire pendant un trajet en voiture",
+    "difficulty": 1,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "C'est mieux quand c'est grand",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Amphibiens",
+    "difficulty": 3,
+    "theme": "Animaux",
+    "lang": "français"
+  },
+  {
+    "text": "Activités à faire pendant un voyage en avion",
+    "difficulty": 1,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser au film \"Astérix Mission Cléopâtre\"",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Boulevard, avenues et rues de Paris",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Prénoms qui riment en \"a\"",
+    "difficulty": 1,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "Les blondes sont...",
+    "difficulty": 2,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Mots pour décrire un aéroport",
+    "difficulty": 3,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Dans un bureau de tabac",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Prénom d'un ou d'une de mes ex",
+    "difficulty": 2,
+    "theme": "Sentiment",
+    "lang": "français"
+  },
+  {
+    "text": "Prix et récompenses",
+    "difficulty": 3,
+    "theme": "Personnages",
+    "lang": "français"
+  },
+  {
+    "text": "C'est noir et blanc",
+    "difficulty": 1,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Dans un paysage urbain...",
+    "difficulty": 2,
+    "theme": "Geographie",
+    "lang": "français"
+  },
+  {
+    "text": "Mots du rugby",
+    "difficulty": 3,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Comédies musicales",
+    "difficulty": 1,
+    "theme": "Divertissement",
+    "lang": "français"
+  },
+  {
+    "text": "Ça rappelle les années 60",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Mots du poker",
+    "difficulty": 3,
+    "theme": "Activités",
+    "lang": "français"
+  },
+  {
+    "text": "Métiers qui riment en \"é\"",
+    "difficulty": 1,
+    "theme": "Metiers",
+    "lang": "français"
+  },
+  {
+    "text": "Ça fait penser à Koh Lanta",
+    "difficulty": 2,
+    "theme": "Objets",
+    "lang": "français"
+  },
+  {
+    "text": "Éléments géographiques (ex : baie, colline...)",
+    "difficulty": 3,
+    "theme": "Geographie",
     "lang": "français"
   }
 ]
