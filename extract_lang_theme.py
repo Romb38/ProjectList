@@ -5,7 +5,7 @@ import argparse
 def extract_unique_values(data, key):
     return list(set(item[key] for item in data if key in item))
 
-def main(input_file, lang_output='lang.json', themes_output='themes.json'):
+def main(input_file, lang_output='lang.json', themes_output='theme.json'):
     # Vérifier si le fichier d'entrée existe et n'est pas vide
     if not os.path.isfile(input_file):
         print(f"Erreur : Le fichier '{input_file}' n'existe pas.")
