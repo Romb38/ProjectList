@@ -1,7 +1,7 @@
 name: ProjectList
 package: fr.standouda.app.projectlist
 author: Romb38,Amassif
-version: 1.0.0
+version: 1.0.1
 icon: https://raw.githubusercontent.com/Romb38/ProjectList/main/info_app/icon.png
 download_link: https://raw.githubusercontent.com/Romb38/ProjectList/main/info_app/ProjectList.apk
 info_link: https://github.com/Romb38/ProjectList
