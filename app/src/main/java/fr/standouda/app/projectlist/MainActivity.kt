@@ -38,7 +38,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -58,7 +60,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fr.standouda.app.projectlist.R
 import fr.standouda.app.projectlist.Constants.FAM_THME_URL
 import fr.standouda.app.projectlist.Shared.chosen_difficulty
 import fr.standouda.app.projectlist.Shared.familyModeThemes
@@ -110,12 +111,15 @@ class MainActivity : ComponentActivity() {
         setFullScreen()
     }
 }
+
 @Composable
 fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) {
 
     val context = LocalContext.current
+    val isChoosingCateogry = remember { mutableStateOf(false) }
+    val selectedCategoryText = remember { mutableStateOf("") }
+    val selectedCategoryDifficulty = remember { mutableStateOf(Color.White) }
     val sharedPreferences = remember { context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
-
     var refreshKey by remember { mutableStateOf(0) }
 
     // On récupère les valeurs dans le cache de l'application
@@ -159,15 +163,19 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
     }
 
     fun updateData() {
-        val datas: List<Category>? = getData()
-        if (datas != null && datas.size == chosen_difficulty) {
-            // On mets à jour les catégories dans le jeu
-            datas.forEach { data ->
-                updateListItemBox(data.text, data.difficulty)
+        if (!isChoosingCateogry.value) {
+            isChoosingCateogry.value = true
+            Log.d("DEBUG", "isChoosingCategory set to true")
+            val datas: List<Category>? = getData()
+            if (datas != null && datas.size == chosen_difficulty) {
+                // On mets à jour les catégories dans le jeu
+                datas.forEach { data ->
+                    updateListItemBox(data.text, data.difficulty)
+                }
+            } else {
+                Log.e("getData", "Error - Fetching data")
+                isToast.value = "Error - Check your internet connection"
             }
-        } else {
-            Log.e("getData", "Error - Fetching data")
-            isToast.value = "Error - Check your internet connection"
         }
     }
 
@@ -251,80 +259,152 @@ fun MainScreen(navController: NavHostController, modifier: Modifier = Modifier) 
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Colonne avec les carrés de liste qui occupent presque tout l'espace disponible
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f) // Permet à LazyColumn de prendre tout l'espace disponible
-                    .padding(vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp) // Espacement entre les éléments
-            ) {
-                items(chosen_difficulty) { i ->
-                    ListItemBox(
-                        text = textArray.value[i], color = getColorForDifficulty(i + 1)
-                    )
+            if(isChoosingCateogry.value) {
+                // Colonne avec les carrés de liste qui occupent presque tout l'espace disponible
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f) // Permet à LazyColumn de prendre tout l'espace disponible
+                        .padding(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp) // Espacement entre les éléments
+                ) {
+                    items(chosen_difficulty) { i ->
+                        ListItemBox(
+                            text = textArray.value[i],
+                            color = getColorForDifficulty(i + 1),
+                            isChoosingCategory = isChoosingCateogry,
+                            selectedCategoryText = selectedCategoryText,
+                            selectedCategoryDifficulty = selectedCategoryDifficulty
+                        )
+                    }
                 }
+            } else {
+
+                Box(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(vertical = 15.dp)
+                        .background(colorResource(R.color.my_red), shape = RoundedCornerShape(40.dp))
+                        .padding(16.dp), contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = modifier
+                            .fillMaxSize()
+                            .padding(4.dp)
+                            .background(Color.White, shape = RoundedCornerShape(30.dp))
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 16.dp), // Padding horizontal pour la Row
+                            verticalAlignment = Alignment.CenterVertically, // Centre les éléments verticalement
+                            horizontalArrangement = Arrangement.SpaceBetween // Espace entre le texte et le point de couleur
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f) // Prend tout l'espace horizontal restant
+                                    .fillMaxHeight(), // Remplit toute la hauteur de la Row
+                                contentAlignment = Alignment.Center // Centre le texte dans le Box
+                            ) {
+                                Text(
+                                    text = selectedCategoryText.value,
+                                    style = TextStyle(
+                                        fontSize = 35.sp, // Taille de la police augmentée
+                                        fontWeight = FontWeight.Bold, // Rend le texte plus gras
+                                        textAlign = TextAlign.Center, // Centrer le texte horizontalement
+                                        color = Color.Black // Définit la couleur du texte en noir
+                                    ),
+                                    modifier = Modifier.fillMaxWidth() // S'assure que le Text occupe toute la largeur disponible
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(15.dp)) // Espacement entre le texte et le point de couleur
+
+                            Box(
+                                modifier = Modifier
+                                    .size(16.dp) // Taille du point
+                                    .background(
+                                        selectedCategoryDifficulty.value, shape = CircleShape
+                                    ) // Point de couleur avec une forme circulaire
+                            )
+                        }
+                    }
+                }
+
             }
+            Log.d("DEBUG", "isChoosingCategory value: ${isChoosingCateogry.value}")
+            if (isChoosingCateogry.value) {
+                Text(
+                    text = "Choissisez une catégorie",
+                    color = Color.White,
+                    fontSize = 25.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(85.dp),
+                    textAlign = TextAlign.Center
+                )
 
-            // Ajouter un Spacer pour créer un espace flexible
-            Spacer(modifier = Modifier.weight(0.005f))
+            } else {
+                Spacer(modifier = Modifier.weight(0.005f))
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .height(100.dp) // Ajustez la hauteur en fonction des besoins
-            ) {
-                Row(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
+                        .height(100.dp) // Ajustez la hauteur en fonction des besoins
                 ) {
-                    // Spacer qui occupe la première partie
-                    Spacer(
+                    Row(
                         modifier = Modifier
-                            .weight(1f) // Prend 1/3 de la largeur
-                    )
-
-                    // Bouton carré pour mettre à jour un ListItemBox, centré
-                    Button(
-                        onClick = {
-                            updateData()
-                            refreshKey++  // Incrémente refreshKey pour provoquer une recomposition
-                        },
-                        modifier = Modifier
-                            .weight(1f) // Prend 1/3 de la largeur
-                            .aspectRatio(1f), // Assure que le bouton reste carré
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(R.color.my_yellow),
-                            contentColor = Color.White
-                        ),
-                        shape = CircleShape
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Refresh",
-                            tint = Color.White,
-                            modifier = Modifier.size(48.dp)
+                        // Spacer qui occupe la première partie
+                        Spacer(
+                            modifier = Modifier
+                                .weight(1f) // Prend 1/3 de la largeur
                         )
-                    }
 
-                    // Bouton des paramètres, aligné à droite dans la troisième partie
-                    IconButton(
-                        onClick = {
-                            // Logique de navigation
-                            navController.navigate("settings")
-                        },
-                        modifier = Modifier
-                            .weight(1f) // Prend 1/3 de la largeur
-                            .align(Alignment.CenterVertically) // Assure l'alignement vertical au centre
-                            .fillMaxWidth(), // Remplit toute la largeur disponible dans la part assignée
-                    ) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = "Settings",
-                            tint = Color.LightGray,
-                            modifier = Modifier.size(38.dp)
-                        )
+                        // Bouton carré pour mettre à jour un ListItemBox, centré
+                        Button(
+                            onClick = {
+                                updateData()
+                                refreshKey++  // Incrémente refreshKey pour provoquer une recomposition
+                            },
+                            modifier = Modifier
+                                .weight(1f) // Prend 1/3 de la largeur
+                                .aspectRatio(1f), // Assure que le bouton reste carré
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(R.color.my_yellow),
+                                contentColor = Color.White
+                            ),
+                            shape = CircleShape
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                contentDescription = "Refresh",
+                                tint = Color.White,
+                                modifier = Modifier.size(48.dp)
+                            )
+                        }
+
+                        // Bouton des paramètres, aligné à droite dans la troisième partie
+                        IconButton(
+                            onClick = {
+                                // Logique de navigation
+                                navController.navigate("settings")
+                            },
+                            modifier = Modifier
+                                .weight(1f) // Prend 1/3 de la largeur
+                                .align(Alignment.CenterVertically) // Assure l'alignement vertical au centre
+                                .fillMaxWidth(), // Remplit toute la largeur disponible dans la part assignée
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Settings,
+                                contentDescription = "Settings",
+                                tint = Color.LightGray,
+                                modifier = Modifier.size(38.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -349,54 +429,76 @@ fun ShowToast(message: String) {
 }
 
 @Composable
-fun ListItemBox(text: String, color: Color, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(167.dp) // Hauteur ajustée pour afficher 3,5 éléments
-            .background(colorResource(R.color.my_red), shape = RoundedCornerShape(40.dp))
-            .padding(16.dp), contentAlignment = Alignment.Center
+fun ListItemBox(text: String,
+                color: Color,
+                modifier: Modifier = Modifier,
+                isChoosingCategory : MutableState<Boolean>,
+                selectedCategoryText: MutableState<String>,
+                selectedCategoryDifficulty: MutableState<Color>
+) {
+    Button(
+        onClick = {
+            isChoosingCategory.value = false;
+            selectedCategoryText.value = text;
+            selectedCategoryDifficulty.value = color;
+            Log.d("DEBUG", "isChoosingCategory set to false")
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Transparent,
+            contentColor = Color.Transparent
+        ),
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         Box(
+
             modifier = modifier
-                .fillMaxSize()
-                .padding(4.dp)
-                .background(Color.White, shape = RoundedCornerShape(30.dp))
+                .fillMaxWidth()
+                .height(167.dp) // Hauteur ajustée pour afficher 3,5 éléments
+                .background(colorResource(R.color.my_red), shape = RoundedCornerShape(40.dp))
+                .padding(16.dp), contentAlignment = Alignment.Center
         ) {
-            Row(
-                modifier = Modifier
+            Box(
+                modifier = modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp), // Padding horizontal pour la Row
-                verticalAlignment = Alignment.CenterVertically, // Centre les éléments verticalement
-                horizontalArrangement = Arrangement.SpaceBetween // Espace entre le texte et le point de couleur
+                    .padding(4.dp)
+                    .background(Color.White, shape = RoundedCornerShape(30.dp))
             ) {
-                Box(
+                Row(
                     modifier = Modifier
-                        .weight(1f) // Prend tout l'espace horizontal restant
-                        .fillMaxHeight(), // Remplit toute la hauteur de la Row
-                    contentAlignment = Alignment.Center // Centre le texte dans le Box
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp), // Padding horizontal pour la Row
+                    verticalAlignment = Alignment.CenterVertically, // Centre les éléments verticalement
+                    horizontalArrangement = Arrangement.SpaceBetween // Espace entre le texte et le point de couleur
                 ) {
-                    Text(
-                        text = text,
-                        style = TextStyle(
-                            fontSize = 20.sp, // Taille de la police augmentée
-                            fontWeight = FontWeight.Bold, // Rend le texte plus gras
-                            textAlign = TextAlign.Center, // Centrer le texte horizontalement
-                            color = Color.Black // Définit la couleur du texte en noir
-                        ),
-                        modifier = Modifier.fillMaxWidth() // S'assure que le Text occupe toute la largeur disponible
+                    Box(
+                        modifier = Modifier
+                            .weight(1f) // Prend tout l'espace horizontal restant
+                            .fillMaxHeight(), // Remplit toute la hauteur de la Row
+                        contentAlignment = Alignment.Center // Centre le texte dans le Box
+                    ) {
+                        Text(
+                            text = text,
+                            style = TextStyle(
+                                fontSize = 20.sp, // Taille de la police augmentée
+                                fontWeight = FontWeight.Bold, // Rend le texte plus gras
+                                textAlign = TextAlign.Center, // Centrer le texte horizontalement
+                                color = Color.Black // Définit la couleur du texte en noir
+                            ),
+                            modifier = Modifier.fillMaxWidth() // S'assure que le Text occupe toute la largeur disponible
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(15.dp)) // Espacement entre le texte et le point de couleur
+
+                    Box(
+                        modifier = Modifier
+                            .size(16.dp) // Taille du point
+                            .background(
+                                color, shape = CircleShape
+                            ) // Point de couleur avec une forme circulaire
                     )
                 }
-
-                Spacer(modifier = Modifier.width(15.dp)) // Espacement entre le texte et le point de couleur
-
-                Box(
-                    modifier = Modifier
-                        .size(16.dp) // Taille du point
-                        .background(
-                            color, shape = CircleShape
-                        ) // Point de couleur avec une forme circulaire
-                )
             }
         }
     }
